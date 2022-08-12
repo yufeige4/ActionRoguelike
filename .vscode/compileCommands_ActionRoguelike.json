@@ -1,0 +1,27 @@
+[
+	{
+		"file": "D:\\\\GitHub\\\\ActionRoguelike\\\\ActionRoguelike\\\\Source\\\\ActionRoguelike\\\\ActionRoguelike.Build.cs",
+		"command": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe @\"D:\\GitHub\\ActionRoguelike\\ActionRoguelike\\.vscode\\compileCommands_ActionRoguelike\\ActionRoguelike.210.rsp\"",
+		"directory": "C:\\Program Files\\Epic Games\\UE_4.27\\Engine\\Source"
+	},
+	{
+		"file": "D:\\\\GitHub\\\\ActionRoguelike\\\\ActionRoguelike\\\\Source\\\\ActionRoguelike\\\\ActionRoguelike.cpp",
+		"command": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe @\"D:\\GitHub\\ActionRoguelike\\ActionRoguelike\\.vscode\\compileCommands_ActionRoguelike\\ActionRoguelike.210.rsp\"",
+		"directory": "C:\\Program Files\\Epic Games\\UE_4.27\\Engine\\Source"
+	},
+	{
+		"file": "D:\\\\GitHub\\\\ActionRoguelike\\\\ActionRoguelike\\\\Source\\\\ActionRoguelike\\\\ActionRoguelike.h",
+		"command": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe @\"D:\\GitHub\\ActionRoguelike\\ActionRoguelike\\.vscode\\compileCommands_ActionRoguelike\\ActionRoguelike.210.rsp\"",
+		"directory": "C:\\Program Files\\Epic Games\\UE_4.27\\Engine\\Source"
+	},
+	{
+		"file": "D:\\\\GitHub\\\\ActionRoguelike\\\\ActionRoguelike\\\\Source\\\\ActionRoguelike\\\\ActionRoguelikeGameModeBase.cpp",
+		"command": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe @\"D:\\GitHub\\ActionRoguelike\\ActionRoguelike\\.vscode\\compileCommands_ActionRoguelike\\ActionRoguelike.210.rsp\"",
+		"directory": "C:\\Program Files\\Epic Games\\UE_4.27\\Engine\\Source"
+	},
+	{
+		"file": "D:\\\\GitHub\\\\ActionRoguelike\\\\ActionRoguelike\\\\Source\\\\ActionRoguelike\\\\ActionRoguelikeGameModeBase.h",
+		"command": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30133\\bin\\HostX64\\x64\\cl.exe @\"D:\\GitHub\\ActionRoguelike\\ActionRoguelike\\.vscode\\compileCommands_ActionRoguelike\\ActionRoguelike.210.rsp\"",
+		"directory": "C:\\Program Files\\Epic Games\\UE_4.27\\Engine\\Source"
+	}
+]
