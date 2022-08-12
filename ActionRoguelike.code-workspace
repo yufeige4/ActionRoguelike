@@ -10,7 +10,9 @@
 		}
 	],
 	"settings": {
-		"typescript.tsc.autoDetect": "off"
+		"typescript.tsc.autoDetect": "off",
+		"C_Cpp.default.compilerPath": "c1.exe",
+		"C_Cpp.clang_format_path": "D:\\GitHub\\clang-format.exe"
 	},
 	"extensions": {
 		"recommendations": [

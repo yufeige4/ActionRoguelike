@@ -1,14 +1,19 @@
 {
-	"configurations": [
-		{
-			"name": "ActionRoguelikeEditor Editor Win64 Development (ActionRoguelike)",
-			"intelliSenseMode": "msvc-x64",
-			"compileCommands": "D:\\GitHub\\ActionRoguelike\\.vscode\\compileCommands_ActionRoguelike.json"
-		},
-		{
-			"name": "Win32",
-			"intelliSenseMode": "msvc-x64",
-			"compileCommands": "D:\\GitHub\\ActionRoguelike\\.vscode\\compileCommands_Default.json"
-		}
-	]
+    "configurations": [
+        {
+            "name": "ActionRoguelikeEditor Editor Win64 Development (ActionRoguelike)",
+            "intelliSenseMode": "msvc-x64",
+            "compileCommands": "D:\\GitHub\\ActionRoguelike\\.vscode\\compileCommands_ActionRoguelike.json",
+            "cStandard": "c17",
+            "cppStandard": "c++17"
+        },
+        {
+            "name": "Win32",
+            "intelliSenseMode": "msvc-x64",
+            "compileCommands": "D:\\GitHub\\ActionRoguelike\\.vscode\\compileCommands_Default.json",
+            "cStandard": "c17",
+            "cppStandard": "c++17"
+        }
+    ],
+    "version": 4
 }
