@@ -61,6 +61,25 @@ void AGCharacter::MoveRight(float val)
 	AddMovementInput(RightVector,val);
 }
 
+void AGCharacter::PrimaryShoot()
+{
+	// 设置从手指处出现火球
+	FVector HandLocation =  GetMesh()->GetSocketLocation("RightHandMiddle4");
+	// set up spawn transform for projectile
+	FTransform SpawnTransformMat = FTransform(GetControlRotation(),HandLocation);
+	
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	// 从世界场景中生成该Projectile
+	GetWorld()->SpawnActor<AActor>(ProjectileClass,SpawnTransformMat,SpawnParams);
+}
+
+void AGCharacter::jump()
+{
+	Super::Jump();
+}
+
 // Called to bind functionality to input
 void AGCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -72,6 +91,12 @@ void AGCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 	PlayerInputComponent->BindAxis("Turn",this,&APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp",this,&APawn::AddControllerPitchInput);
+
+	// shooting magic projectile
+	PlayerInputComponent->BindAction("PrimaryShoot",IE_Pressed,this,&AGCharacter::PrimaryShoot);
+
+	// jump
+	PlayerInputComponent->BindAction("Jump",IE_Pressed,this,&AGCharacter::jump);
 	
 }
 
