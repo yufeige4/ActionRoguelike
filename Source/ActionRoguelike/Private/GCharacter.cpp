@@ -4,6 +4,7 @@
 #include "GCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 // Sets default values
 AGCharacter::AGCharacter()
@@ -22,6 +23,9 @@ AGCharacter::AGCharacter()
 	bUseControllerRotationYaw = false;
 	// 角色永远朝向移动的方向
 	GetCharacterMovement()->bOrientRotationToMovement = true;
+
+	// 添加Interaction组件
+	InteractionComp = CreateDefaultSubobject<UGInteractionComponent>("InteractionComp");
 }
 
 // Called when the game starts or when spawned
@@ -61,7 +65,7 @@ void AGCharacter::MoveRight(float val)
 	AddMovementInput(RightVector,val);
 }
 
-void AGCharacter::PrimaryShoot()
+void AGCharacter::PrimaryAttack_TimeElapsed()
 {
 	// 设置从手指处出现火球
 	FVector HandLocation =  GetMesh()->GetSocketLocation("RightHandMiddle4");
@@ -73,6 +77,22 @@ void AGCharacter::PrimaryShoot()
 
 	// 从世界场景中生成该Projectile
 	GetWorld()->SpawnActor<AActor>(ProjectileClass,SpawnTransformMat,SpawnParams);
+}
+
+void AGCharacter::PrimaryShoot()
+{
+	PlayAnimMontage(AttackAnim);
+	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack,this,&AGCharacter::PrimaryAttack_TimeElapsed,0.5f);
+	// 用于当玩家死亡时 取消攻击判定
+	// GetWorldTimerManager().ClearTimer(TimerHandle_PrimaryAttack);
+}
+
+void AGCharacter::PrimaryInteract()
+{
+	if(InteractionComp!=nullptr)
+	{
+		InteractionComp->PrimaryInteract();
+	}
 }
 
 void AGCharacter::jump()
@@ -97,6 +117,14 @@ void AGCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 	// jump
 	PlayerInputComponent->BindAction("Jump",IE_Pressed,this,&AGCharacter::jump);
-	
+
+	// 交互按键
+	PlayerInputComponent->BindAction("PrimaryInteract",IE_Pressed,this,&AGCharacter::PrimaryInteract);
+}
+
+void AGCharacter::GetCameraViewPoint(FVector& CameraPosition, FRotator& CameraRotation)
+{
+	CameraPosition = CameraComp->GetComponentLocation();
+	CameraRotation = CameraComp->GetComponentRotation();
 }
 

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GInteractionComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -31,17 +32,15 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* CameraComp;
 
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<AActor> ProjectileClass;
-
+	UPROPERTY(VisibleAnywhere)
+	UGInteractionComponent* InteractionComp;
+	
 	void MoveForward(float val);
 	void MoveRight(float val);
-
-	// shoot magic projectile
-	void PrimaryShoot();
-
+	
 	// jump
 	void jump();
+
 
 public:	
 	// Called every frame
@@ -50,4 +49,25 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	// Get position and Rotation of camera
+	void GetCameraViewPoint(FVector& CameraPosition,FRotator& CameraRotation);
+
+protected:
+	
+	UPROPERTY(EditAnywhere,Category = "Attack")
+	TSubclassOf<AActor> ProjectileClass;
+
+	UPROPERTY(EditAnywhere,Category = "Attack")
+	UAnimMontage* AttackAnim;
+
+	FTimerHandle TimerHandle_PrimaryAttack;
+
+	void PrimaryAttack_TimeElapsed();
+	// shoot magic projectile
+	void PrimaryShoot();
+
+	// Interact function
+	void PrimaryInteract();
+
+	
 };

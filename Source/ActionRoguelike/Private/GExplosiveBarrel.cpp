@@ -18,7 +18,7 @@ AGExplosiveBarrel::AGExplosiveBarrel()
 	ForceComp->ImpulseStrength = 2500.0f;
 	// ignore body mass, fixed effect to all
 	ForceComp->bImpulseVelChange = true;
-	// exclude WorldDynamic
+	// Add which channel of objects to affect
 	ForceComp->AddCollisionChannelToAffect(ECC_WorldDynamic);
 	
 	
