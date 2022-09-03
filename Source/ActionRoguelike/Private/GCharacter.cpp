@@ -74,7 +74,7 @@ void AGCharacter::PrimaryAttack_TimeElapsed()
 	
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-
+	SpawnParams.Instigator = this;
 	// 从世界场景中生成该Projectile
 	GetWorld()->SpawnActor<AActor>(ProjectileClass,SpawnTransformMat,SpawnParams);
 }
