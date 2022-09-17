@@ -66,8 +66,10 @@ protected:
 	UPROPERTY(EditAnywhere,Category = "Attack")
 	UAnimMontage* AttackAnim;
 
+	float AttackAnimDelay;
+
 	FTimerHandle TimerHandle_PrimaryAttack;
-	FTimerHandle TimerHandle_FireStormAttack;
+	FTimerHandle TimerHandle_SpecialAttack;
 	FTimerHandle TimerHandle_Dash;
 	
 	void FireBallAttack_TimeElapsed();
@@ -75,9 +77,9 @@ protected:
 	void Dash_TimeElapsed();
 	
 	// shoot fireball projectile
-	void PrimaryShoot();
+	void PrimaryAttack();
 	// throw firestorm projectile
-	void FireStormShoot();
+	void SpecialAttack();
 	// dash
 	void Dash();
 	

@@ -29,6 +29,8 @@ AGCharacter::AGCharacter()
 
 	// 添加Interaction组件
 	InteractionComp = CreateDefaultSubobject<UGInteractionComponent>("InteractionComp");
+
+	AttackAnimDelay = 0.5f;
 }
 
 // Called when the game starts or when spawned
@@ -83,20 +85,24 @@ void AGCharacter::Dash_TimeElapsed()
 	SpawnProjectile(DashProjectileClass);
 }
 
-void AGCharacter::PrimaryShoot()
+void AGCharacter::PrimaryAttack()
 {
 	PlayAnimMontage(AttackAnim);
-	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack,this,&AGCharacter::FireBallAttack_TimeElapsed,0.5f);
+	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack,this,&AGCharacter::FireBallAttack_TimeElapsed,AttackAnimDelay);
 	// 用于当玩家死亡时 取消攻击判定
 	// GetWorldTimerManager().ClearTimer(TimerHandle_PrimaryAttack);
 }
 
-void AGCharacter::FireStormShoot()
+void AGCharacter::SpecialAttack()
 {
+	PlayAnimMontage(AttackAnim);
+	GetWorldTimerManager().SetTimer(TimerHandle_SpecialAttack,this,&AGCharacter::FireStormAttack_TimeElapsed,AttackAnimDelay);
 }
 
 void AGCharacter::Dash()
 {
+	PlayAnimMontage(AttackAnim);
+	GetWorldTimerManager().SetTimer(TimerHandle_Dash,this,&AGCharacter::Dash_TimeElapsed,AttackAnimDelay);
 }
 
 void AGCharacter::PrimaryInteract()
@@ -177,13 +183,19 @@ void AGCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAxis("LookUp",this,&APawn::AddControllerPitchInput);
 
 	// shooting magic projectile
-	PlayerInputComponent->BindAction("PrimaryShoot",IE_Pressed,this,&AGCharacter::PrimaryShoot);
+	PlayerInputComponent->BindAction("PrimaryAttack",IE_Pressed,this,&AGCharacter::PrimaryAttack);
 
 	// jump
 	PlayerInputComponent->BindAction("Jump",IE_Pressed,this,&AGCharacter::jump);
 
 	// 交互按键
 	PlayerInputComponent->BindAction("PrimaryInteract",IE_Pressed,this,&AGCharacter::PrimaryInteract);
+
+	// 使用特殊技能
+	PlayerInputComponent->BindAction("SpecialAttack",IE_Pressed,this,&AGCharacter::SpecialAttack);
+
+	// 使用Dash
+	PlayerInputComponent->BindAction("Dash",IE_Pressed,this,&AGCharacter::Dash);
 }
 
 void AGCharacter::GetCameraViewPoint(FVector& CameraPosition, FRotator& CameraRotation)

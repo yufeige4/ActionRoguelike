@@ -42,10 +42,10 @@ void AGProjectileBase::Explode_Implementation()
 	{
 		// 实现了之前蓝图中实现的爆破效果
 		UGameplayStatics::SpawnEmitterAtLocation(this,ImpactVFX,GetActorLocation(),GetActorRotation());
-		// EffectComp->DeactivateSystem();
-		//
-		// MoveComp->StopMovementImmediately();
-		// SetActorEnableCollision(false);
+		EffectComp->DeactivateSystem();
+		
+		MoveComp->StopMovementImmediately();
+		SetActorEnableCollision(false);
 
 		Destroy();
 	}
@@ -54,5 +54,7 @@ void AGProjectileBase::Explode_Implementation()
 void AGProjectileBase::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
+	// 弹道移动中忽略触发者本身
+	SphereComp->IgnoreActorWhenMoving(GetInstigator(),true);
 }
 
