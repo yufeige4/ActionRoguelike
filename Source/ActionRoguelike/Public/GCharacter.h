@@ -58,16 +58,33 @@ protected:
 	TSubclassOf<AActor> ProjectileClass;
 
 	UPROPERTY(EditAnywhere,Category = "Attack")
+	TSubclassOf<AActor> FireStormProjectileClass;
+
+	UPROPERTY(EditAnywhere,Category = "Attack")
+	TSubclassOf<AActor> DashProjectileClass;
+
+	UPROPERTY(EditAnywhere,Category = "Attack")
 	UAnimMontage* AttackAnim;
 
 	FTimerHandle TimerHandle_PrimaryAttack;
-
-	void PrimaryAttack_TimeElapsed();
-	// shoot magic projectile
+	FTimerHandle TimerHandle_FireStormAttack;
+	FTimerHandle TimerHandle_Dash;
+	
+	void FireBallAttack_TimeElapsed();
+	void FireStormAttack_TimeElapsed();
+	void Dash_TimeElapsed();
+	
+	// shoot fireball projectile
 	void PrimaryShoot();
-
+	// throw firestorm projectile
+	void FireStormShoot();
+	// dash
+	void Dash();
+	
 	// Interact function
 	void PrimaryInteract();
 
+	// extract common part of spawn projectile
+	void SpawnProjectile(TSubclassOf<AActor> ClassToSpawn);
 	
 };
