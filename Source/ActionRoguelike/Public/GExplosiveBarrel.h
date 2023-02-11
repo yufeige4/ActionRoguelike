@@ -26,13 +26,22 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	URadialForceComponent* ForceComp;
 
+	UPROPERTY(EditAnywhere)
+	float ImpulseDelay;
+	
+
 	// implement on-hit event
 	UFUNCTION()
 	void OnActorHit(UPrimitiveComponent* HitComp,AActor* OtherActor,UPrimitiveComponent* OtherComp,FVector NormalImpulse,const FHitResult& Hit);
 
 	// initialize and bind on-hit event to mesh
 	virtual void PostInitializeComponents() override;
-		
+
+private:
+	
+	bool ImpulseLock;
+	FTimerHandle ImpulseDelayTimer;
+	void Unlock_ImpulseTime_Elapsed();
 
 
 };

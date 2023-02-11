@@ -2,6 +2,8 @@
 
 
 #include "GMagicProjectile.h"
+
+#include "GAttributeComponent.h"
 #include "Particles/ParticleSystemComponent.h"
 
 // Sets default values
@@ -18,6 +20,11 @@ void AGMagicProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent,
 {
 	if(OtherActor && OtherActor!=GetInstigator())
 	{
+		UGAttributeComponent* AttributeComp = Cast<UGAttributeComponent> (OtherActor->GetComponentByClass(UGAttributeComponent::StaticClass()));
+		if(AttributeComp)
+		{
+			AttributeComp->ApplyHealthChange(-DamageAmount);
+		}
 		Explode();
 	}
 }

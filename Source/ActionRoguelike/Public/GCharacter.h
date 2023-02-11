@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GAttributeComponent.h"
 #include "GInteractionComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/Character.h"
@@ -34,6 +35,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	UGInteractionComponent* InteractionComp;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UGAttributeComponent* AttributeComp;
 	
 	void MoveForward(float val);
 	void MoveRight(float val);

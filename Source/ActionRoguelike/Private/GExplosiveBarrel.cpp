@@ -3,6 +3,8 @@
 
 #include "GExplosiveBarrel.h"
 
+#include "GAttributeComponent.h"
+
 // Sets default values
 AGExplosiveBarrel::AGExplosiveBarrel()
 {
@@ -20,9 +22,8 @@ AGExplosiveBarrel::AGExplosiveBarrel()
 	ForceComp->bImpulseVelChange = true;
 	// Add which channel of objects to affect
 	ForceComp->AddCollisionChannelToAffect(ECC_WorldDynamic);
-	
-	
-
+	ImpulseLock = false;
+	ImpulseDelay = 1.0f;
 }
 
 // Called when the game starts or when spawned
@@ -35,9 +36,23 @@ void AGExplosiveBarrel::BeginPlay()
 void AGExplosiveBarrel::OnActorHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	FVector NormalImpulse, const FHitResult& Hit)
 {
-	ForceComp->FireImpulse();
-	// Log this event for check
-	UE_LOG(LogTemp, Log, TEXT("OnActorHit reached (ExplosiveBarrel)"));
+	if(!ImpulseLock)
+	{
+		if(OtherActor)
+		{
+			ImpulseLock = true;
+			ForceComp->FireImpulse();
+			GetWorldTimerManager().SetTimer(ImpulseDelayTimer,this,&AGExplosiveBarrel::Unlock_ImpulseTime_Elapsed,ImpulseDelay);
+			UGAttributeComponent* AttributeComp = Cast<UGAttributeComponent>(OtherActor->GetComponentByClass(UGAttributeComponent::StaticClass()));
+			if(AttributeComp)
+			{
+				AttributeComp->ApplyHealthChange(-50);
+			}
+			
+		}
+		// Log this event for check
+		UE_LOG(LogTemp, Log, TEXT("OnActorHit reached (ExplosiveBarrel)"));
+	}
 }
 
 void AGExplosiveBarrel::PostInitializeComponents()
@@ -45,3 +60,10 @@ void AGExplosiveBarrel::PostInitializeComponents()
 	Super::PostInitializeComponents();
 	MeshComp->OnComponentHit.AddDynamic(this,&AGExplosiveBarrel::OnActorHit);
 }
+
+void AGExplosiveBarrel::Unlock_ImpulseTime_Elapsed()
+{
+	ImpulseLock = false;
+}
+
+

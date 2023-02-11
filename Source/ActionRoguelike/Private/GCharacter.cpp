@@ -29,6 +29,8 @@ AGCharacter::AGCharacter()
 
 	// 添加Interaction组件
 	InteractionComp = CreateDefaultSubobject<UGInteractionComponent>("InteractionComp");
+	// 添加属性组件
+	AttributeComp = CreateDefaultSubobject<UGAttributeComponent>("AttributeComp");
 
 	AttackAnimDelay = 0.5f;
 }
