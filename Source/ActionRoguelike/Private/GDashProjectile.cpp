@@ -8,6 +8,7 @@
 
 AGDashProjectile::AGDashProjectile()
 {
+	// default value
 	DetonateDelay = 0.2f;
 	TeleportDelay = 0.2f;
 
@@ -23,6 +24,7 @@ void AGDashProjectile::BeginPlay()
 
 void AGDashProjectile::Explode_Implementation()
 {
+	// 提前碰撞时正确的清空计时器
 	GetWorldTimerManager().ClearTimer(TimerHandle_DetonateDelay);
 
 	// 停下取消特效和碰撞，并生成视觉特效

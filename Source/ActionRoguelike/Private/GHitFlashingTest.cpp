@@ -13,7 +13,7 @@ AGHitFlashingTest::AGHitFlashingTest()
 }
 
 void AGHitFlashingTest::HitFlash(AActor* InstigatorActor, UGAttributeComponent* OwningComp, float NewHealth,
-	float Delta)
+	float Delta) 
 {
 	if(Delta<0.0f)
 	{

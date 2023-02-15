@@ -6,6 +6,7 @@
 #include "Components/SphereComponent.h"
 #include "GameFramework/Actor.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "UObject/NiagaraObjectVersion.h"
 #include "GProjectileBase.generated.h"
 
 UCLASS(Abstract)
@@ -18,10 +19,10 @@ public:
 	AGProjectileBase();
 
 protected:
-
+	// 爆炸特效
 	UPROPERTY(EditDefaultsOnly, Category = "Effects")
 	UParticleSystem* ImpactVFX;
-
+	
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = "Components")
 	USphereComponent* SphereComp;
 
@@ -33,7 +34,7 @@ protected:
 
 	// implement on-hit event
 	UFUNCTION()
-	void OnActorHit(UPrimitiveComponent* HitComp,AActor* OtherActor,UPrimitiveComponent* OtherComp,FVector NormalImpulse,const FHitResult& Hit);
+	virtual void OnActorHit(UPrimitiveComponent* HitComp,AActor* OtherActor,UPrimitiveComponent* OtherComp,FVector NormalImpulse,const FHitResult& Hit);
 
 	UFUNCTION(BlueprintCallable,BlueprintNativeEvent)
 	void Explode();

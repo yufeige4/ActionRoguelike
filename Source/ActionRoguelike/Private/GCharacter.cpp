@@ -157,6 +157,7 @@ void AGCharacter::SpawnProjectile(TSubclassOf<AActor> ClassToSpawn)
 		// set up spawn transform for projectile
 		FTransform SpawnTransformMat = FTransform(SpawnRotation,HandLocation);
 
+		// spawn parameters
 		// Projectile忽略角色本身
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
