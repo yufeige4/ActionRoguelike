@@ -3,6 +3,7 @@
 
 #include "GProjectileBase.h"
 
+#include "Components/AudioComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
 
@@ -27,6 +28,8 @@ AGProjectileBase::AGProjectileBase()
 	MoveComp->bInitialVelocityInLocalSpace = true;
 	MoveComp->ProjectileGravityScale = 0.0f;
 
+	// Set up AudioComp
+	AudioComp = CreateDefaultSubobject<UAudioComponent>("AudioComp");
 }
 
 
@@ -57,4 +60,11 @@ void AGProjectileBase::PostInitializeComponents()
 	// 弹道移动中忽略触发者本身
 	SphereComp->IgnoreActorWhenMoving(GetInstigator(),true);
 }
+
+void AGProjectileBase::BeginPlay()
+{
+	Super::BeginPlay();
+	AudioComp->Play();
+}
+
 

@@ -18,3 +18,8 @@ bool UGAttributeComponent::ApplyHealthChange(float Delta)
 	return true;
 }
 
+bool UGAttributeComponent::IsAlive() const
+{
+	return Health > 0.0f;
+}
+

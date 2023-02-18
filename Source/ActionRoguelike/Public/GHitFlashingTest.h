@@ -22,8 +22,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UStaticMeshComponent* MeshComp;
-
-public:
+	
 	UFUNCTION()
 	void HitFlash(AActor* InstigatorActor, UGAttributeComponent* OwningComp, float NewHealth, float Delta);
 

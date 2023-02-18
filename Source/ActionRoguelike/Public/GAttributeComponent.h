@@ -30,5 +30,8 @@ public:
 	// 包含代理
 	UPROPERTY(BlueprintAssignable)
 	FOnHealthChanged OnHealthChanged;
+
+	UFUNCTION(BlueprintCallable)
+	bool IsAlive() const;
 		
 };

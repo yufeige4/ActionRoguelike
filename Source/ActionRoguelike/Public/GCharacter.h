@@ -92,5 +92,9 @@ protected:
 
 	// extract common part of spawn projectile
 	void SpawnProjectile(TSubclassOf<AActor> ClassToSpawn);
-	
+
+	UFUNCTION()
+	void OnHealthChanged(AActor* InstigatorActor, UGAttributeComponent* OwningComp, float NewHealth, float Delta);
+
+	virtual void PostInitializeComponents() override;
 };

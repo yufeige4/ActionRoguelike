@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/SphereComponent.h"
+#include "Components/AudioComponent.h"
 #include "GameFramework/Actor.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "UObject/NiagaraObjectVersion.h"
@@ -32,6 +33,10 @@ protected:
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = "Components")
 	UParticleSystemComponent* EffectComp;
 
+	// 飞行音效
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UAudioComponent* AudioComp;
+
 	// implement on-hit event
 	UFUNCTION()
 	virtual void OnActorHit(UPrimitiveComponent* HitComp,AActor* OtherActor,UPrimitiveComponent* OtherComp,FVector NormalImpulse,const FHitResult& Hit);
@@ -40,12 +45,8 @@ protected:
 	void Explode();
 
 	virtual void PostInitializeComponents() override;
+public:
+	virtual void BeginPlay() override;
 
-	
-
-	// 用不到
-	// public:	
-	// 	Called every frame
-	// 	virtual void Tick(float DeltaTime) override;
 
 };
