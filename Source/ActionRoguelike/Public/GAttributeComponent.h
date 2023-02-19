@@ -19,9 +19,13 @@ public:
 	UGAttributeComponent();
 
 protected:
-	// 生命值
+	// 当前生命值
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
-	float Health;
+	float CurrHealth;
+
+	// 最大生命值
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
+	float MaxHealth;
 
 public:	
 	// 对生命值进行修改

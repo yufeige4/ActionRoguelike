@@ -39,6 +39,8 @@ void AGMagicProjectile::Explode_Implementation()
 {
 	GetWorldTimerManager().ClearTimer(TimerHandle_selfDestroy);
 	UGameplayStatics::PlaySoundAtLocation(GetWorld(),ImpactSound,GetActorLocation(),GetActorRotation());
+	// 爆炸相机抖动
+	UGameplayStatics::PlayWorldCameraShake(GetWorld(),ImpactShake,GetActorLocation(),0.0f,2500.0f);
 	Super::Explode_Implementation();
 }
 

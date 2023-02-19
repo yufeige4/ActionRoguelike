@@ -95,6 +95,8 @@ protected:
 
 	UFUNCTION()
 	void OnHealthChanged(AActor* InstigatorActor, UGAttributeComponent* OwningComp, float NewHealth, float Delta);
-
+	
+	void DamagedFlash();
+	
 	virtual void PostInitializeComponents() override;
 };

@@ -8,6 +8,7 @@
 
 AGDashProjectile::AGDashProjectile()
 {
+	
 	// default value
 	DetonateDelay = 0.2f;
 	TeleportDelay = 0.2f;

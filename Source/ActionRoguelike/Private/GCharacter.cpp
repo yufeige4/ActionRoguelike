@@ -170,11 +170,20 @@ void AGCharacter::SpawnProjectile(TSubclassOf<AActor> ClassToSpawn)
 
 void AGCharacter::OnHealthChanged(AActor* InstigatorActor, UGAttributeComponent* OwningComp, float NewHealth, float Delta)
 {
+	if(Delta<0.0f)
+	{
+		DamagedFlash();
+	}
 	if(NewHealth<=0.0f && Delta<0.0f)
 	{
 		APlayerController* PC = Cast<APlayerController>(GetController());
 		DisableInput(PC);
 	}
+}
+
+void AGCharacter::DamagedFlash()
+{
+	GetMesh()->SetScalarParameterValueOnMaterials("TimeToHit",GetWorld()->TimeSeconds);
 }
 
 void AGCharacter::PostInitializeComponents()

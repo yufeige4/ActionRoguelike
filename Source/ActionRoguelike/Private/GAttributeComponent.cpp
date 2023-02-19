@@ -6,20 +6,21 @@
 // Sets default values for this component's properties
 UGAttributeComponent::UGAttributeComponent()
 {
-	Health = 100;
+	CurrHealth = 100.0f;
+	MaxHealth = 100.0f;
 }
 
 bool UGAttributeComponent::ApplyHealthChange(float Delta)
 {
-	Health += Delta;
+	CurrHealth = FMath::Clamp(CurrHealth+Delta,0.0f,MaxHealth);
 	// 调用代理
-	OnHealthChanged.Broadcast(nullptr,this,Health,Delta);
+	OnHealthChanged.Broadcast(nullptr,this,CurrHealth,Delta);
 	
 	return true;
 }
 
 bool UGAttributeComponent::IsAlive() const
 {
-	return Health > 0.0f;
+	return CurrHealth > 0.0f;
 }
 

@@ -87,6 +87,7 @@ void UGInteractionComponent::PrimaryInteract()
 				APawn* MyPawn = Cast<APawn>(MyOwner);
 				// 调用接口
 				IGGameplayInterface::Execute_Interact(HitActor,MyPawn);
+				// 只和第一个物体交互
 				break;
 			}
 		}

@@ -30,6 +30,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Audio")
 	USoundCue* ImpactSound;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Effects")
+	TSubclassOf<UCameraShakeBase> ImpactShake;
+	
+
 	FTimerHandle TimerHandle_selfDestroy;
 
 	void SelfDestroy();
