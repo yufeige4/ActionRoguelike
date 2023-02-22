@@ -24,8 +24,16 @@ void UGBTService_RangeCheck::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* 
 				float AttackRange = MyBB->GetValueAsFloat(Key_AttackRange.SelectedKeyName);
 				float Distance = FVector::Distance(TargetActor->GetActorLocation(),MyPawn->GetActorLocation());
 
-				bool InsideAttackRange = Distance <= AttackRange;
-				MyBB->SetValueAsBool(Key_InsideAttackRange.SelectedKeyName,InsideAttackRange);
+				bool bOutsideAttackRange = Distance > AttackRange;
+				bool bShouldChase = false;
+				// 判断是否可以看见玩家
+				bool bHasLOS = true;
+				if(!bOutsideAttackRange)
+				{
+					bHasLOS = MyController->LineOfSightTo(TargetActor);
+				}
+				bShouldChase = bOutsideAttackRange || !bHasLOS;
+				MyBB->SetValueAsBool(Key_ChasingTarget.SelectedKeyName,bShouldChase);
 			}
 		}
 	}

@@ -24,6 +24,7 @@ protected:
 	FBlackboardKeySelector Key_AttackRange;
 
 	UPROPERTY(EditAnywhere, Category = "AI")
-	FBlackboardKeySelector Key_InsideAttackRange;
+	FBlackboardKeySelector Key_ChasingTarget
+	;
 	
 };
