@@ -13,9 +13,6 @@ AGProjectileBase::AGProjectileBase()
 	// Set up SphereComp to RootComp and collision type
 	SphereComp = CreateDefaultSubobject<USphereComponent>("SphereComp");
 	SphereComp->SetCollisionProfileName("Projectile");
-	// 绑定Hit事件
-	SphereComp->OnComponentHit.AddDynamic(this,&AGProjectileBase::OnActorHit);
-	RootComponent = SphereComp;
 	
 	// Set up EffectComp
 	EffectComp = CreateDefaultSubobject<UParticleSystemComponent>("EffectComp");
@@ -23,7 +20,7 @@ AGProjectileBase::AGProjectileBase()
 
 	// set up Movement, its initial speed and other params
 	MoveComp = CreateDefaultSubobject<UProjectileMovementComponent>("MovementComp");
-	MoveComp->InitialSpeed = 2000.0f;
+	MoveComp->InitialSpeed = ProjectileSpeed;
 	MoveComp->bRotationFollowsVelocity = true;
 	MoveComp->bInitialVelocityInLocalSpace = true;
 	MoveComp->ProjectileGravityScale = 0.0f;
@@ -59,6 +56,8 @@ void AGProjectileBase::PostInitializeComponents()
 	Super::PostInitializeComponents();
 	// 弹道移动中忽略触发者本身
 	SphereComp->IgnoreActorWhenMoving(GetInstigator(),true);
+	// 绑定Hit事件
+	SphereComp->OnComponentHit.AddDynamic(this,&AGProjectileBase::OnActorHit);
 }
 
 void AGProjectileBase::BeginPlay()

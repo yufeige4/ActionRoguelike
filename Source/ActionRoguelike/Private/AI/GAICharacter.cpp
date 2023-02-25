@@ -18,6 +18,21 @@ void AGAICharacter::BeginPlay()
 	
 }
 
+void AGAICharacter::SpawnProjectile(TSubclassOf<AActor> Projectile,FVector Location,FRotator Rotation)
+{
+	if(ensureAlways(Projectile))
+	{
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		SpawnParams.Instigator = this;
+
+		FTransform SpawnTrans = FTransform(Rotation,Location);
+
+		GetWorld()->SpawnActor<AActor>(Projectile,SpawnTrans,SpawnParams);
+	}
+}
+
+
 // Called every frame
 void AGAICharacter::Tick(float DeltaTime)
 {
@@ -28,6 +43,22 @@ void AGAICharacter::Tick(float DeltaTime)
 float AGAICharacter::GetAttackRange_Implementation()
 {
 	return AttackRange;
+}
+
+void AGAICharacter::Attack_Implementation(AActor* TargetActor)
+{
+	IGAICharacterInterface::Attack_Implementation(TargetActor);
+
+	FVector SpawnLocation = GetMesh()->GetSocketLocation("Muzzle_Front_XForward");
+	FVector TargetLocation = TargetActor->GetActorLocation();
+	FRotator SpawnRotation = FRotationMatrix::MakeFromX(TargetLocation-SpawnLocation).Rotator();
+
+	auto RangeAttack_TimeElapsed = [=]()
+	{
+		SpawnProjectile(RangeAttackProjectile,SpawnLocation,SpawnRotation);
+	};
+	PlayAnimMontage(RangeAttackAnim);
+	GetWorldTimerManager().SetTimer(TimerHandle_RangeAttack,RangeAttack_TimeElapsed,1,false,RangeAttackProjectileDelay);
 }
 
 

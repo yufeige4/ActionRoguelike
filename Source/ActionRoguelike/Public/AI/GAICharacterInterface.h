@@ -25,5 +25,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	float GetAttackRange();
-	
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void Attack(AActor* TargetActor);
 };

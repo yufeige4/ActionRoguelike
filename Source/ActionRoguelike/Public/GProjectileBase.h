@@ -20,6 +20,9 @@ public:
 	AGProjectileBase();
 
 protected:
+
+	UPROPERTY(EditDefaultsOnly, Category = "Basics")
+	float ProjectileSpeed = 2000;
 	// 爆炸特效
 	UPROPERTY(EditDefaultsOnly, Category = "Effects")
 	UParticleSystem* ImpactVFX;
