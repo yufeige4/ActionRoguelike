@@ -13,12 +13,13 @@
 void AGAIController::BeginPlay()
 {
 	Super::BeginPlay();
-	APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(this,0);
+	// remove the previous hard-code logic
+	/*APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(this,0);
 	UBlackboardComponent* MyBB = GetBlackboardComponent();
 	if(ensure(MyBB)&ensure(PlayerPawn))
 	{
 		MyBB->SetValueAsObject("TargetActor",PlayerPawn);
-	}
+	}*/
 }
 
 void AGAIController::OnPossess(APawn* InPawn)

@@ -3,20 +3,18 @@
 
 #include "AI/GAICharacter.h"
 
+#include "AIController.h"
+#include "DrawDebugHelpers.h"
+#include "BehaviorTree/BlackboardComponent.h"
+
 // Sets default values
 AGAICharacter::AGAICharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
 
-}
-
-// Called when the game starts or when spawned
-void AGAICharacter::BeginPlay()
-{
-	Super::BeginPlay();
+	PawnSensingComp = CreateDefaultSubobject<UPawnSensingComponent>("PawnSensingComp");
 	
 }
+
 
 void AGAICharacter::SpawnProjectile(TSubclassOf<AActor> Projectile,FVector Location,FRotator Rotation)
 {
@@ -33,11 +31,23 @@ void AGAICharacter::SpawnProjectile(TSubclassOf<AActor> Projectile,FVector Locat
 }
 
 
-// Called every frame
-void AGAICharacter::Tick(float DeltaTime)
+void AGAICharacter::PostInitializeComponents()
 {
-	Super::Tick(DeltaTime);
+	Super::PostInitializeComponents();
 
+	PawnSensingComp->OnSeePawn.AddDynamic(this,&AGAICharacter::OnPawnSeen);
+}
+
+void AGAICharacter::OnPawnSeen(APawn* SeenPawn)
+{
+	AAIController* AIC = Cast<AAIController>(GetController());
+	if(AIC)
+	{
+		auto MyBB = AIC->GetBlackboardComponent();
+		MyBB->SetValueAsObject("TargetActor",SeenPawn);
+
+		DrawDebugString(GetWorld(),GetActorLocation(),"See Player!!!",nullptr,FColor::White,4.0f,true);
+	}
 }
 
 float AGAICharacter::GetAttackRange_Implementation()

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GAICharacterInterface.h"
 #include "GameFramework/Character.h"
+#include "Perception/PawnSensingComponent.h"
 #include "GAICharacter.generated.h"
 
 UCLASS()
@@ -17,8 +18,9 @@ public:
 	AGAICharacter();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UPawnSensingComponent* PawnSensingComp;
 
 	UPROPERTY(EditAnywhere, Category = "AI|Attack")
 	float AttackRange = 500;
@@ -28,20 +30,23 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "AI|Animation")
 	UAnimMontage* RangeAttackAnim;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "AI|Animation")
 	float RangeAttackProjectileDelay;
 
 	void SpawnProjectile(TSubclassOf<AActor> Projectile,FVector Position,FRotator Rotation);
 
 	FTimerHandle TimerHandle_RangeAttack;
-	void RangeAttack_TimeElapsed();
-	
-	
+
+	virtual void PostInitializeComponents() override;
+
+	UFUNCTION()
+	void OnPawnSeen(APawn* SeenPawn);
+
 public:	 
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 	
 	virtual float GetAttackRange_Implementation() override;
 	
 	virtual void Attack_Implementation(AActor* TargetActor) override;
+	
 };
