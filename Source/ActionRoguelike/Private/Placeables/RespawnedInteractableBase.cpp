@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "RespawnedInteractableBase.h"
+#include "Placeables/RespawnedInteractableBase.h"
 
 // Sets default values
 ARespawnedInteractableBase::ARespawnedInteractableBase()
@@ -45,15 +45,13 @@ void ARespawnedInteractableBase::Interact_Implementation(APawn* InstigatorPawn)
 {
 	if(CanInteract)
 	{
-		IGGameplayInterface::Interact_Implementation(InstigatorPawn);
-		GEngine->AddOnScreenDebugMessage(0,2,FColor::Green,"Interact!");
+		//GEngine->AddOnScreenDebugMessage(0,2,FColor::Green,"Interact!");
 		EndInteract_Implementation(InstigatorPawn);
 	}
 }
 
 void ARespawnedInteractableBase::EndInteract_Implementation(APawn* InstigatorPawn)
 {
-	IGGameplayInterface::EndInteract_Implementation(InstigatorPawn);
 	switch (InteractType)
 	{
 	case EInteractType::DoNothing:

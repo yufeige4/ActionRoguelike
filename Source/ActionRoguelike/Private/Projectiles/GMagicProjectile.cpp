@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "GMagicProjectile.h"
+#include "Projectiles/GMagicProjectile.h"
 
-#include "GAttributeComponent.h"
+#include "Components/GAttributeComponent.h"
 #include "AudioMixerXAudio2/Private/AudioMixerPlatformXAudio2.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GAttributeComponent.h"
+#include "Components/GAttributeComponent.h"
 #include "GameFramework/Actor.h"
 #include "GHitFlashingTest.generated.h"
 

@@ -1,9 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "GRespawnedPotion.h"
+#include "Placeables/GRespawnedPotion.h"
 
-#include "GAttributeComponent.h"
+#include "DrawDebugHelpers.h"
+#include "Components/GAttributeComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 AGRespawnedPotion::AGRespawnedPotion()
@@ -17,7 +18,7 @@ void AGRespawnedPotion::Interact_Implementation(APawn* InstigatorPawn)
 	if(CanInteract)
 	{
 		UGAttributeComponent* AttributeComp = Cast<UGAttributeComponent>(InstigatorPawn->GetComponentByClass(UGAttributeComponent::StaticClass()));
-		if(AttributeComp)
+		if(AttributeComp && !AttributeComp->IsFullHealth())
 		{
 			UMeshComponent* InstigatorMesh = Cast<UMeshComponent>(InstigatorPawn->GetComponentByClass(UMeshComponent::StaticClass()));
 			if(MeshComp)
@@ -26,7 +27,11 @@ void AGRespawnedPotion::Interact_Implementation(APawn* InstigatorPawn)
 			}
 			UGameplayStatics::PlaySoundAtLocation(GetWorld(),HealingSound,InstigatorPawn->GetActorLocation(),InstigatorPawn->GetActorRotation());
 			AttributeComp->ApplyHealthChange(HealingAmount);
+			
+			Super::Interact_Implementation(InstigatorPawn);
+		}else
+		{
+			DrawDebugString(GetWorld(),GetActorLocation(),"Invalid Interact! No AttributeComp or full health!",nullptr,FColor::Red,4,true);
 		}
 	}
-	Super::Interact_Implementation(InstigatorPawn);
 }

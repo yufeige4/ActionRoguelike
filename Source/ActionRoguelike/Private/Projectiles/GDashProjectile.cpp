@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "GDashProjectile.h"
+#include "Projectiles/GDashProjectile.h"
 
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"

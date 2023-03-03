@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "GAttributeComponent.h"
+#include "Components/GAttributeComponent.h"
 
 // Sets default values for this component's properties
 UGAttributeComponent::UGAttributeComponent()
@@ -22,5 +22,10 @@ bool UGAttributeComponent::ApplyHealthChange(float Delta)
 bool UGAttributeComponent::IsAlive() const
 {
 	return CurrHealth > 0.0f;
+}
+
+bool UGAttributeComponent::IsFullHealth() const
+{
+	return CurrHealth==MaxHealth;
 }
 

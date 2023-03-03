@@ -28,4 +28,5 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void Attack(AActor* TargetActor);
+	
 };

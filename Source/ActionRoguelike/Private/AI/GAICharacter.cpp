@@ -10,9 +10,9 @@
 // Sets default values
 AGAICharacter::AGAICharacter()
 {
-
+	AttributeComp = CreateDefaultSubobject<UGAttributeComponent>("AttributeComp");
 	PawnSensingComp = CreateDefaultSubobject<UPawnSensingComponent>("PawnSensingComp");
-	
+	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
 
 
@@ -46,7 +46,7 @@ void AGAICharacter::OnPawnSeen(APawn* SeenPawn)
 		auto MyBB = AIC->GetBlackboardComponent();
 		MyBB->SetValueAsObject("TargetActor",SeenPawn);
 
-		DrawDebugString(GetWorld(),GetActorLocation(),"See Player!!!",nullptr,FColor::White,4.0f,true);
+		//DrawDebugString(GetWorld(),GetActorLocation(),"See Player!!!",nullptr,FColor::White,4.0f,true);
 	}
 }
 
@@ -70,5 +70,6 @@ void AGAICharacter::Attack_Implementation(AActor* TargetActor)
 	PlayAnimMontage(RangeAttackAnim);
 	GetWorldTimerManager().SetTimer(TimerHandle_RangeAttack,RangeAttack_TimeElapsed,1,false,RangeAttackProjectileDelay);
 }
+
 
 

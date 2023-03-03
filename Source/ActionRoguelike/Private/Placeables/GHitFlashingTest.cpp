@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "GHitFlashingTest.h"
+#include "Placeables/GHitFlashingTest.h"
 
 AGHitFlashingTest::AGHitFlashingTest()
 {

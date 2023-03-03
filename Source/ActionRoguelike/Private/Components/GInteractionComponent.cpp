@@ -1,11 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "GInteractionComponent.h"
+#include "Components/GInteractionComponent.h"
 
 #include "DrawDebugHelpers.h"
-#include "GCharacter.h"
-#include "GGameplayInterface.h"
+#include "Player/GCharacter.h"
+#include "Core/GGameplayInterface.h"
 
 // Sets default values for this component's properties
 UGInteractionComponent::UGInteractionComponent()

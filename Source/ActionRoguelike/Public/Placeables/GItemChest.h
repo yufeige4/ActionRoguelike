@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GGameplayInterface.h"
+#include "Core/GGameplayInterface.h"
 #include "GameFramework/Actor.h"
 #include "GItemChest.generated.h"
 

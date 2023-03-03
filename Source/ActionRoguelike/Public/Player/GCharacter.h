@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GAttributeComponent.h"
-#include "GInteractionComponent.h"
+#include "Components/GAttributeComponent.h"
+#include "Components/GInteractionComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/SpringArmComponent.h"

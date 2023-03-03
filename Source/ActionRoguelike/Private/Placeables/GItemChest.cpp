@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "GItemChest.h"
+#include "Placeables/GItemChest.h"
 
 
 // Sets default values

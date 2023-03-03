@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GAICharacterInterface.h"
+#include "Blueprint/UserWidget.h"
+#include "Components/GAttributeComponent.h"
 #include "GameFramework/Character.h"
 #include "Perception/PawnSensingComponent.h"
 #include "GAICharacter.generated.h"
@@ -20,6 +22,8 @@ public:
 protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UGAttributeComponent* AttributeComp;
+	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UPawnSensingComponent* PawnSensingComp;
 
 	UPROPERTY(EditAnywhere, Category = "AI|Attack")
@@ -33,20 +37,22 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "AI|Animation")
 	float RangeAttackProjectileDelay;
-
-	void SpawnProjectile(TSubclassOf<AActor> Projectile,FVector Position,FRotator Rotation);
-
+	
 	FTimerHandle TimerHandle_RangeAttack;
-
-	virtual void PostInitializeComponents() override;
-
-	UFUNCTION()
-	void OnPawnSeen(APawn* SeenPawn);
 
 public:	 
 	
 	virtual float GetAttackRange_Implementation() override;
 	
 	virtual void Attack_Implementation(AActor* TargetActor) override;
+
+protected:
 	
+	virtual void PostInitializeComponents() override;
+
+	UFUNCTION()
+	void OnPawnSeen(APawn* SeenPawn);
+
+	void SpawnProjectile(TSubclassOf<AActor> Projectile,FVector Position,FRotator Rotation);
 };
+

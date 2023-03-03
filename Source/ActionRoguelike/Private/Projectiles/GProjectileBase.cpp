@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "GProjectileBase.h"
+#include "Projectiles/GProjectileBase.h"
 
 #include "Components/AudioComponent.h"
 #include "Kismet/GameplayStatics.h"

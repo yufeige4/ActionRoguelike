@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "GExplosiveBarrel.h"
+#include "Placeables/GExplosiveBarrel.h"
 
-#include "GAttributeComponent.h"
+#include "Components/GAttributeComponent.h"
 
 // Sets default values
 AGExplosiveBarrel::AGExplosiveBarrel()
