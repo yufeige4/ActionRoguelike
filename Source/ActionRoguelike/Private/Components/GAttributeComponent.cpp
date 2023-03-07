@@ -10,11 +10,13 @@ UGAttributeComponent::UGAttributeComponent()
 	MaxHealth = 100.0f;
 }
 
-bool UGAttributeComponent::ApplyHealthChange(float Delta)
+bool UGAttributeComponent::ApplyHealthChange(AActor* Instigator, float Delta)
 {
+	float PreviousHealth = CurrHealth;
 	CurrHealth = FMath::Clamp(CurrHealth+Delta,0.0f,MaxHealth);
+	float AcutualDelta = CurrHealth - PreviousHealth;
 	// 调用代理
-	OnHealthChanged.Broadcast(nullptr,this,CurrHealth,Delta);
+	OnHealthChanged.Broadcast(Instigator,this,CurrHealth,AcutualDelta);
 	
 	return true;
 }
@@ -27,5 +29,21 @@ bool UGAttributeComponent::IsAlive() const
 bool UGAttributeComponent::IsFullHealth() const
 {
 	return CurrHealth==MaxHealth;
+}
+
+UGAttributeComponent* UGAttributeComponent::GetAttributeComponent(AActor* Actor)
+{
+	if(Actor)
+	{
+		return Cast<UGAttributeComponent>(Actor->GetComponentByClass(UGAttributeComponent::StaticClass()));
+	}
+	return nullptr;
+}
+
+// return false if no AttributeComp or not alive
+bool UGAttributeComponent::IsActorAlive(AActor* Actor)
+{
+	UGAttributeComponent* AttributeComp = GetAttributeComponent(Actor);
+	return (AttributeComp && AttributeComp->IsAlive());
 }
 

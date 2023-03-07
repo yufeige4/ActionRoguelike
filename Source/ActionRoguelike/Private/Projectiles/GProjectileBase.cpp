@@ -13,10 +13,10 @@ AGProjectileBase::AGProjectileBase()
 	// Set up SphereComp to RootComp and collision type
 	SphereComp = CreateDefaultSubobject<USphereComponent>("SphereComp");
 	SphereComp->SetCollisionProfileName("Projectile");
-	
+	RootComponent = SphereComp;
 	// Set up EffectComp
 	EffectComp = CreateDefaultSubobject<UParticleSystemComponent>("EffectComp");
-	EffectComp->SetupAttachment(SphereComp);
+	EffectComp->SetupAttachment(RootComponent);
 
 	// set up Movement, its initial speed and other params
 	MoveComp = CreateDefaultSubobject<UProjectileMovementComponent>("MovementComp");
@@ -27,6 +27,7 @@ AGProjectileBase::AGProjectileBase()
 
 	// Set up AudioComp
 	AudioComp = CreateDefaultSubobject<UAudioComponent>("AudioComp");
+	AudioComp->SetupAttachment(RootComponent);
 }
 
 

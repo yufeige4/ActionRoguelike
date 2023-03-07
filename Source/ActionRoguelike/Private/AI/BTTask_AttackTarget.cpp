@@ -6,6 +6,7 @@
 #include "AIController.h"
 #include "AI/GAICharacterInterface.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Components/GAttributeComponent.h"
 
 EBTNodeResult::Type UBTTask_AttackTarget::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
@@ -18,7 +19,7 @@ EBTNodeResult::Type UBTTask_AttackTarget::ExecuteTask(UBehaviorTreeComponent& Ow
 		if(MyPawn && MyPawn->Implements<UGAICharacterInterface>())
 		{
 			AActor* TargetActor = Cast<AActor>(MyBB->GetValueAsObject(Key_TargetActor.SelectedKeyName));
-			if(TargetActor)
+			if(TargetActor && UGAttributeComponent::IsActorAlive(TargetActor))
 			{
 				IGAICharacterInterface::Execute_Attack(MyPawn,TargetActor);
 				return EBTNodeResult::Succeeded;

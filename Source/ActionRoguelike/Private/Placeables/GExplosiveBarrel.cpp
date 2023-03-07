@@ -43,10 +43,10 @@ void AGExplosiveBarrel::OnActorHit(UPrimitiveComponent* HitComp, AActor* OtherAc
 			ImpulseLock = true;
 			ForceComp->FireImpulse();
 			GetWorldTimerManager().SetTimer(ImpulseDelayTimer,this,&AGExplosiveBarrel::Unlock_ImpulseTime_Elapsed,ImpulseDelay);
-			UGAttributeComponent* AttributeComp = Cast<UGAttributeComponent>(OtherActor->GetComponentByClass(UGAttributeComponent::StaticClass()));
+			UGAttributeComponent* AttributeComp = UGAttributeComponent::GetAttributeComponent(OtherActor);
 			if(AttributeComp)
 			{
-				AttributeComp->ApplyHealthChange(-50);
+				AttributeComp->ApplyHealthChange(this,-50);
 			}
 			
 		}

@@ -49,10 +49,10 @@ void AGMagicProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent,
 {
 	if(OtherActor && OtherActor!=GetInstigator())
 	{
-		UGAttributeComponent* AttributeComp = Cast<UGAttributeComponent> (OtherActor->GetComponentByClass(UGAttributeComponent::StaticClass()));
+		UGAttributeComponent* AttributeComp = UGAttributeComponent::GetAttributeComponent(OtherActor);
 		if(AttributeComp)
 		{
-			AttributeComp->ApplyHealthChange(-DamageAmount);
+			AttributeComp->ApplyHealthChange(GetInstigator(),-DamageAmount);
 		}
 		Explode();
 	}

@@ -33,6 +33,7 @@ AGCharacter::AGCharacter()
 	AttributeComp = CreateDefaultSubobject<UGAttributeComponent>("AttributeComp");
 
 	AttackAnimDelay = 0.5f;
+	TimeToHit = "TimeToHit";
 }
 
 // Called when the game starts or when spawned
@@ -183,7 +184,7 @@ void AGCharacter::OnHealthChanged(AActor* InstigatorActor, UGAttributeComponent*
 
 void AGCharacter::DamagedFlash()
 {
-	GetMesh()->SetScalarParameterValueOnMaterials("TimeToHit",GetWorld()->TimeSeconds);
+	GetMesh()->SetScalarParameterValueOnMaterials(TimeToHit,GetWorld()->TimeSeconds);
 }
 
 void AGCharacter::PostInitializeComponents()

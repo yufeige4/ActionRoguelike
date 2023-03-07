@@ -38,12 +38,6 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UGAttributeComponent* AttributeComp;
-	
-	void MoveForward(float val);
-	void MoveRight(float val);
-	
-	// jump
-	void jump();
 
 
 public:	
@@ -69,6 +63,16 @@ protected:
 
 	UPROPERTY(EditAnywhere,Category = "Attack")
 	UAnimMontage* AttackAnim;
+
+	UPROPERTY(VisibleDefaultsOnly,Category = "Effects")
+	FName TimeToHit;
+
+	void MoveForward(float val);
+	void MoveRight(float val);
+	
+	// jump
+	void jump();
+
 
 	float AttackAnimDelay;
 

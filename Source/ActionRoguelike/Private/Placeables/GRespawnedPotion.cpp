@@ -17,7 +17,7 @@ void AGRespawnedPotion::Interact_Implementation(APawn* InstigatorPawn)
 {
 	if(CanInteract)
 	{
-		UGAttributeComponent* AttributeComp = Cast<UGAttributeComponent>(InstigatorPawn->GetComponentByClass(UGAttributeComponent::StaticClass()));
+		UGAttributeComponent* AttributeComp = UGAttributeComponent::GetAttributeComponent(InstigatorPawn);
 		if(AttributeComp && !AttributeComp->IsFullHealth())
 		{
 			UMeshComponent* InstigatorMesh = Cast<UMeshComponent>(InstigatorPawn->GetComponentByClass(UMeshComponent::StaticClass()));
@@ -26,7 +26,7 @@ void AGRespawnedPotion::Interact_Implementation(APawn* InstigatorPawn)
 				UGameplayStatics::SpawnEmitterAttached(HealingEffect,InstigatorMesh,NAME_None,FVector(ForceInit),FRotator::ZeroRotator,FVector(1),EAttachLocation::SnapToTarget);
 			}
 			UGameplayStatics::PlaySoundAtLocation(GetWorld(),HealingSound,InstigatorPawn->GetActorLocation(),InstigatorPawn->GetActorRotation());
-			AttributeComp->ApplyHealthChange(HealingAmount);
+			AttributeComp->ApplyHealthChange(this,HealingAmount);
 			
 			Super::Interact_Implementation(InstigatorPawn);
 		}else

@@ -23,7 +23,7 @@ void UGSpawnControlComponent::SpawnReset_TimeElapsed()
 		AGAICharacter* AICharacter = *It;
 		if(AICharacter)
 		{
-			auto AttributeComp = Cast<UGAttributeComponent>(AICharacter->GetComponentByClass(UGAttributeComponent::StaticClass()));
+			auto AttributeComp = UGAttributeComponent::GetAttributeComponent(AICharacter);
 			if(AttributeComp && AttributeComp->IsAlive())
 			{
 				++CurrNumCount;

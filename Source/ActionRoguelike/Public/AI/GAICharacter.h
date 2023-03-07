@@ -32,11 +32,18 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "AI|Attack")
 	TSubclassOf<AActor> RangeAttackProjectile;
 
+	// Random Rotation Offset in Degree
+	UPROPERTY(EditAnywhere, Category = "AI|Attack")
+	float RandomAttackOffset;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "AI|Animation")
 	UAnimMontage* RangeAttackAnim;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "AI|Animation")
 	float RangeAttackProjectileDelay;
+
+	UPROPERTY(VisibleDefaultsOnly,Category = "Effects")
+	FName TimeToHit;
 	
 	FTimerHandle TimerHandle_RangeAttack;
 
@@ -46,6 +53,7 @@ public:
 	
 	virtual void Attack_Implementation(AActor* TargetActor) override;
 
+
 protected:
 	
 	virtual void PostInitializeComponents() override;
@@ -53,6 +61,15 @@ protected:
 	UFUNCTION()
 	void OnPawnSeen(APawn* SeenPawn);
 
+	UFUNCTION()
+	void OnChangedHealth(AActor* InstigatorActor, UGAttributeComponent* OwningComp, float NewHealth, float Delta);
+
 	void SpawnProjectile(TSubclassOf<AActor> Projectile,FVector Position,FRotator Rotation);
+
+	void DamagedFlash();
+
+	void Die();
+
+	void SetTargetActor(AActor* Target);
 };
 
