@@ -5,6 +5,7 @@
 
 #include <string>
 
+#include "GBlueprintFunctionLibrary.h"
 #include "AI/GAICharacterInterface.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -31,10 +32,13 @@ void AGAIController::OnPossess(APawn* InPawn)
 
 	if(ensure(MyBB))
 	{
+		// 配置攻击距离
 		if(InPawn->Implements<UGAICharacterInterface>())
 		{
 			float AttackRange = IGAICharacterInterface::Execute_GetAttackRange(InPawn);
 			MyBB->SetValueAsFloat("AttackRange",AttackRange);
 		}
+		// 配置初始化键值
+		MyBB->SetValueAsEnum("State",static_cast<uint8>(EAIState::InCombat));
 	}
 }

@@ -125,5 +125,20 @@ void AGAICharacter::Attack_Implementation(AActor* TargetActor)
 	GetWorldTimerManager().SetTimer(TimerHandle_RangeAttack,RangeAttack_TimeElapsed,1,false,RangeAttackProjectileDelay);
 }
 
+void AGAICharacter::Recover_Implementation()
+{
+	IGAICharacterInterface::Recover_Implementation();
+
+	float AnimLength = PlayAnimMontage(RecoverAnim,0.5);
+	
+	GetWorldTimerManager().SetTimer(TimerHandle_Recover,this,&AGAICharacter::RecoverElapsed,AnimLength);
+}
+
+void AGAICharacter::RecoverElapsed()
+{
+	AttributeComp->ApplyHealthChange(this,AttributeComp->GetMaxHealth());
+	UE_LOG(LogTemp,Log,TEXT("Finish Recover!!!"));
+}
+
 
 

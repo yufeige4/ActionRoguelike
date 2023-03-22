@@ -28,5 +28,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void Attack(AActor* TargetActor);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void Recover();
 	
 };

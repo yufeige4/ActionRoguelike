@@ -47,3 +47,13 @@ bool UGAttributeComponent::IsActorAlive(AActor* Actor)
 	return (AttributeComp && AttributeComp->IsAlive());
 }
 
+float UGAttributeComponent::GetCurrHealth()
+{
+	return CurrHealth;
+}
+
+float UGAttributeComponent::GetMaxHealth()
+{
+	return MaxHealth;
+}
+

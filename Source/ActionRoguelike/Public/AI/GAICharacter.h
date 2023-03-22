@@ -23,6 +23,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UGAttributeComponent* AttributeComp;
+	
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UPawnSensingComponent* PawnSensingComp;
 
@@ -38,6 +39,9 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "AI|Animation")
 	UAnimMontage* RangeAttackAnim;
+
+	UPROPERTY(EditDefaultsOnly, Category = "AI|Animation")
+	UAnimMontage* RecoverAnim;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "AI|Animation")
 	float RangeAttackProjectileDelay;
@@ -47,12 +51,15 @@ protected:
 	
 	FTimerHandle TimerHandle_RangeAttack;
 
+	FTimerHandle TimerHandle_Recover;
+
 public:	 
 	
 	virtual float GetAttackRange_Implementation() override;
 	
 	virtual void Attack_Implementation(AActor* TargetActor) override;
 
+	virtual void Recover_Implementation() override;
 
 protected:
 	
@@ -71,5 +78,8 @@ protected:
 	void Die();
 
 	void SetTargetActor(AActor* Target);
+
+	UFUNCTION()
+	void RecoverElapsed();
 };
 
