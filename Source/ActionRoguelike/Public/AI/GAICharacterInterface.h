@@ -6,6 +6,7 @@
 #include "UObject/Interface.h"
 #include "GAICharacterInterface.generated.h"
 
+class UBTTaskNode;
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
 class UGAICharacterInterface : public UInterface
@@ -30,6 +31,6 @@ public:
 	void Attack(AActor* TargetActor);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void Recover();
+	void Recover(UBTTaskNode* TaskNode);
 	
 };

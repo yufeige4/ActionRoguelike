@@ -52,4 +52,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
 	float GetMaxHealth();
+
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
+	bool Kill(AActor* Instigator);
 };

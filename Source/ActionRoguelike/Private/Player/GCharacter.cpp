@@ -194,6 +194,7 @@ void AGCharacter::PostInitializeComponents()
 	AttributeComp->OnHealthChanged.AddDynamic(this,&AGCharacter::OnHealthChanged);
 }
 
+
 void AGCharacter::jump()
 {
 	Super::Jump();
@@ -233,3 +234,7 @@ void AGCharacter::GetCameraViewPoint(FVector& CameraPosition, FRotator& CameraRo
 	CameraRotation = CameraComp->GetComponentRotation();
 }
 
+void AGCharacter::HealSelf(float Amount)
+{
+	AttributeComp->ApplyHealthChange(this,Amount);
+}

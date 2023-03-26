@@ -6,8 +6,10 @@
 #include "AIController.h"
 #include "BrainComponent.h"
 #include "DrawDebugHelpers.h"
+#include "AI/BTTask_RecoverHealth.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "UI/GUserWidget_World.h"
 
 // Sets default values
 AGAICharacter::AGAICharacter()
@@ -35,10 +37,6 @@ void AGAICharacter::SpawnProjectile(TSubclassOf<AActor> Projectile,FVector Locat
 	}
 }
 
-void AGAICharacter::DamagedFlash()
-{
-	GetMesh()->SetScalarParameterValueOnMaterials(TimeToHit,GetWorld()->TimeSeconds);
-}
 
 void AGAICharacter::Die()
 {
@@ -88,6 +86,7 @@ void AGAICharacter::OnChangedHealth(AActor* InstigatorActor, UGAttributeComponen
 {
 	if(Delta<0.0f)
 	{
+		DisplayHealthBar();
 		DamagedFlash();
 		// can be improve by filter out ally
 		if(InstigatorActor!=this)
@@ -125,20 +124,38 @@ void AGAICharacter::Attack_Implementation(AActor* TargetActor)
 	GetWorldTimerManager().SetTimer(TimerHandle_RangeAttack,RangeAttack_TimeElapsed,1,false,RangeAttackProjectileDelay);
 }
 
-void AGAICharacter::Recover_Implementation()
+void AGAICharacter::Recover_Implementation(UBTTaskNode* TaskNode)
 {
-	IGAICharacterInterface::Recover_Implementation();
+	IGAICharacterInterface::Recover_Implementation(TaskNode);
 
 	float AnimLength = PlayAnimMontage(RecoverAnim,0.5);
-	
-	GetWorldTimerManager().SetTimer(TimerHandle_Recover,this,&AGAICharacter::RecoverElapsed,AnimLength);
+
+	UBTTask_RecoverHealth* RecoverHealthTask = Cast<UBTTask_RecoverHealth>(TaskNode);
+	auto FinshRecover = [=]()		
+	{
+		if(IsValid(AttributeComp))
+		{
+			AttributeComp->ApplyHealthChange(this,AttributeComp->GetMaxHealth());
+		}
+		if(RecoverHealthTask)
+		{
+			RecoverHealthTask->OnRecoverFinished.Broadcast();
+		}
+	};
+	GetWorldTimerManager().SetTimer(TimerHandle_Recover,FinshRecover,AnimLength,false);
 }
 
-void AGAICharacter::RecoverElapsed()
+void AGAICharacter::DamagedFlash()
 {
-	AttributeComp->ApplyHealthChange(this,AttributeComp->GetMaxHealth());
-	UE_LOG(LogTemp,Log,TEXT("Finish Recover!!!"));
+	GetMesh()->SetScalarParameterValueOnMaterials(TimeToHit,GetWorld()->TimeSeconds);
 }
 
-
-
+void AGAICharacter::DisplayHealthBar()
+{
+	if(!HealthBarInstance)
+	{
+		HealthBarInstance = CreateWidget<UGUserWidget_World>(GetWorld(),HealthBarClass);
+		HealthBarInstance->AttachedActor = this;
+		HealthBarInstance->AddToViewport();
+	}
+}

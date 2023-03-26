@@ -24,5 +24,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UGSpawnControlComponent* SpawnControlComp;
-	
+
+public:
+
+	UFUNCTION(Exec)
+	void KillAll();
 };
