@@ -10,6 +10,7 @@
 #include "Perception/PawnSensingComponent.h"
 #include "GAICharacter.generated.h"
 
+class UGUserWidget_World;
 UCLASS()
 class ACTIONROGUELIKE_API AGAICharacter : public ACharacter, public IGAICharacterInterface
 {
@@ -46,8 +47,13 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "AI|Animation")
 	float RangeAttackProjectileDelay;
 
-	UPROPERTY(VisibleDefaultsOnly,Category = "Effects")
+	UPROPERTY(VisibleDefaultsOnly, Category = "Effects")
 	FName TimeToHit;
+
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<UUserWidget> HealthBarClass;
+
+	UGUserWidget_World* HealthBarInstance;
 	
 	FTimerHandle TimerHandle_RangeAttack;
 
@@ -59,7 +65,7 @@ public:
 	
 	virtual void Attack_Implementation(AActor* TargetActor) override;
 
-	virtual void Recover_Implementation() override;
+	virtual void Recover_Implementation(UBTTaskNode* TaskNode) override;
 
 protected:
 	
@@ -73,13 +79,13 @@ protected:
 
 	void SpawnProjectile(TSubclassOf<AActor> Projectile,FVector Position,FRotator Rotation);
 
+	// VFX or UI Related HelperFunction
 	void DamagedFlash();
+	void DisplayHealthBar();
 
 	void Die();
 
 	void SetTargetActor(AActor* Target);
-
-	UFUNCTION()
-	void RecoverElapsed();
+	
 };
 

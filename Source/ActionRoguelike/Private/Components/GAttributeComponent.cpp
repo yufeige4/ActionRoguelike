@@ -12,6 +12,10 @@ UGAttributeComponent::UGAttributeComponent()
 
 bool UGAttributeComponent::ApplyHealthChange(AActor* Instigator, float Delta)
 {
+	if(!GetOwner()->CanBeDamaged())
+	{
+		return false;		
+	}
 	float PreviousHealth = CurrHealth;
 	CurrHealth = FMath::Clamp(CurrHealth+Delta,0.0f,MaxHealth);
 	float AcutualDelta = CurrHealth - PreviousHealth;
@@ -55,5 +59,10 @@ float UGAttributeComponent::GetCurrHealth()
 float UGAttributeComponent::GetMaxHealth()
 {
 	return MaxHealth;
+}
+
+bool UGAttributeComponent::Kill(AActor* Instigator)
+{
+	return ApplyHealthChange(Instigator,-MaxHealth);
 }
 

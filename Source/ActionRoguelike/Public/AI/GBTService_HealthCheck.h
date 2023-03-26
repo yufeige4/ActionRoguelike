@@ -16,6 +16,7 @@ class ACTIONROGUELIKE_API UGBTService_HealthCheck : public UBTService
 protected:
 	
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
+	
 
 	UPROPERTY(EditAnywhere, Category = "AI")
 	float EscapeRatio;
@@ -23,5 +24,15 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "AI")
 	FBlackboardKeySelector Key_AIState;
 
-	bool bHaveTriggered = false;
+	UPROPERTY(EditAnywhere, Category = "AI")
+	float RecoverAbilityCD = 60;
+	
+	bool bInCoolDown;
+
+	float TimePassed;
+
+public:
+	
+	UGBTService_HealthCheck(const FObjectInitializer& ObjectInitializer);
+
 };

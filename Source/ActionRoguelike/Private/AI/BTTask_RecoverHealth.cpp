@@ -8,16 +8,34 @@
 
 EBTNodeResult::Type UBTTask_RecoverHealth::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-	auto AIC = Cast<AAIController>(OwnerComp.GetOwner());
-	if(AIC)
+	if(!bStartTask)
 	{
-		auto ControlledPawn = AIC->GetPawn();
-		if(ControlledPawn && ControlledPawn->Implements<UGAICharacterInterface>())
+		auto AIC = Cast<AAIController>(OwnerComp.GetOwner());
+		if(AIC)
 		{
-			IGAICharacterInterface::Execute_Recover(ControlledPawn);
+			auto ControlledPawn = AIC->GetPawn();
+			if(IsValid(ControlledPawn) && ControlledPawn->Implements<UGAICharacterInterface>())
+			{
+				IGAICharacterInterface::Execute_Recover(ControlledPawn,this);
+				TaskState = EBTNodeResult::InProgress;
+				bStartTask = true;
+			}
 		}
 	}
-	return Super::ExecuteTask(OwnerComp, NodeMemory);
-	
+	return TaskState;
+}
+
+UBTTask_RecoverHealth::UBTTask_RecoverHealth()
+{
+	bStartTask = false;
+	TaskState = EBTNodeResult::Succeeded;
+	OnRecoverFinished.AddDynamic(this,&UBTTask_RecoverHealth::FinishedRecover);
+}
+
+void UBTTask_RecoverHealth::FinishedRecover()
+{
+	UE_LOG(LogTemp,Log,TEXT("Finish Recover!!!"));
+	bStartTask = false;
+	TaskState = EBTNodeResult::Succeeded;
 }
 
