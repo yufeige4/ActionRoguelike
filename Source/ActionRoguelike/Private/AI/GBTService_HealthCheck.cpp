@@ -18,10 +18,6 @@ UGBTService_HealthCheck::UGBTService_HealthCheck(const FObjectInitializer& Objec
 void UGBTService_HealthCheck::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
-	if(GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(0,DeltaSeconds,FColor::Red,FString::SanitizeFloat(TimePassed));
-	}
 	// 检查血量
 	auto AIC = Cast<AAIController>(OwnerComp.GetOwner());
 	auto MyBB = OwnerComp.GetBlackboardComponent();

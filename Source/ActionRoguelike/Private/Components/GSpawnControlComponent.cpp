@@ -8,6 +8,7 @@
 #include "AI/GAICharacter.h"
 #include "EnvironmentQuery/EnvQueryManager.h"
 
+static TAutoConsoleVariable<bool> CVarSpawnBot(TEXT("ARPG.SpawnBot"),true,TEXT("CVariable to control whether spawn bots"),ECVF_Cheat);
 // Sets default values for this component's properties
 UGSpawnControlComponent::UGSpawnControlComponent()
 {
@@ -17,6 +18,10 @@ UGSpawnControlComponent::UGSpawnControlComponent()
 
 void UGSpawnControlComponent::SpawnReset_TimeElapsed()
 {
+	if(!CVarSpawnBot.GetValueOnGameThread())
+	{
+		return;
+	}
 	int32 CurrNumCount = 0;
 	for(TActorIterator<AGAICharacter> It(GetWorld()); It; ++It)
 	{

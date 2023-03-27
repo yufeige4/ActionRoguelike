@@ -7,6 +7,7 @@
 #include "Player/GCharacter.h"
 #include "Core/GGameplayInterface.h"
 
+static TAutoConsoleVariable<bool> CVarInteractionDrawDebug(TEXT("ARPG.InteractDrawDebug"),false,TEXT("toggle whether draw debug info for InteractionComp"),ECVF_Cheat);
 // Sets default values for this component's properties
 UGInteractionComponent::UGInteractionComponent()
 {
@@ -74,7 +75,8 @@ void UGInteractionComponent::PrimaryInteract()
 	TArray<FHitResult> Hits;
 	bool bBlockingHit = GetWorld()->SweepMultiByObjectType(Hits,CameraLocation,End,FQuat::Identity,ObjectQueryParams,Shape);
 	// Debug color
-	// FColor LineColor = bBlockingHit ? FColor::Green : FColor::Red;
+	FColor LineColor = bBlockingHit ? FColor::Green : FColor::Red;
+	bool bDebugDraw = CVarInteractionDrawDebug.GetValueOnGameThread();
 	
 	for(FHitResult Hit : Hits)
 	{
@@ -92,12 +94,16 @@ void UGInteractionComponent::PrimaryInteract()
 			}
 		}
 		// Debug Purpose
-		// DrawDebugSphere(GetWorld(),Hit.ImpactPoint,Radius,32,LineColor,false,2.0f);
+		if(bDebugDraw)
+		{
+			DrawDebugSphere(GetWorld(),Hit.ImpactPoint,Radius,32,LineColor,false,2.0f);
+		}
 	}
 	
 	// Debug purpose
-	// DrawDebugLine(GetWorld(),CameraLocation,End,LineColor,false,2.0f,0,2.0f);
-
-	
+	if(bDebugDraw)
+	{
+		DrawDebugLine(GetWorld(),CameraLocation,End,LineColor,false,2.0f,0,2.0f);
+	}
 }
 

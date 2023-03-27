@@ -128,10 +128,14 @@ void AGAICharacter::Recover_Implementation(UBTTaskNode* TaskNode)
 {
 	IGAICharacterInterface::Recover_Implementation(TaskNode);
 
-	float AnimLength = PlayAnimMontage(RecoverAnim,0.5);
+	float AnimLength = PlayAnimMontage(RecoverAnim,0.5) * 2;
+	/*if(GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(0,10,FColor::Green,FString::SanitizeFloat(AnimLength));
+	}*/
 
 	UBTTask_RecoverHealth* RecoverHealthTask = Cast<UBTTask_RecoverHealth>(TaskNode);
-	auto FinshRecover = [=]()		
+	auto FinishRecover = [=]()		
 	{
 		if(IsValid(AttributeComp))
 		{
@@ -142,7 +146,7 @@ void AGAICharacter::Recover_Implementation(UBTTaskNode* TaskNode)
 			RecoverHealthTask->OnRecoverFinished.Broadcast();
 		}
 	};
-	GetWorldTimerManager().SetTimer(TimerHandle_Recover,FinshRecover,AnimLength,false);
+	GetWorldTimerManager().SetTimer(TimerHandle_Recover,FinishRecover,AnimLength,false);
 }
 
 void AGAICharacter::DamagedFlash()

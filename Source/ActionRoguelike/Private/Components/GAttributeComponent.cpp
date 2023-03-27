@@ -2,7 +2,9 @@
 
 
 #include "Components/GAttributeComponent.h"
+#include "Core/GGameModeBase.h"
 
+static TAutoConsoleVariable<float> CVarDamageMultiplier(TEXT("ARPG.DamageMultiplier"),1.0f,TEXT("Global ratio of damage dealing"),ECVF_Cheat);
 // Sets default values for this component's properties
 UGAttributeComponent::UGAttributeComponent()
 {
@@ -16,11 +18,27 @@ bool UGAttributeComponent::ApplyHealthChange(AActor* Instigator, float Delta)
 	{
 		return false;		
 	}
+	if(Delta<0.0f)
+	{
+		float Ratio = CVarDamageMultiplier.GetValueOnGameThread();
+		Delta *= Ratio;
+	}
+	
 	float PreviousHealth = CurrHealth;
 	CurrHealth = FMath::Clamp(CurrHealth+Delta,0.0f,MaxHealth);
 	float AcutualDelta = CurrHealth - PreviousHealth;
 	// 调用代理
 	OnHealthChanged.Broadcast(Instigator,this,CurrHealth,AcutualDelta);
+
+	// Died
+	if(AcutualDelta<0.0f && CurrHealth==0.0f)
+	{
+		auto GM = GetWorld()->GetAuthGameMode<AGGameModeBase>();
+		if(GM)
+		{
+			GM->OnActorKilled(GetOwner(),Instigator);
+		}
+	}
 	
 	return true;
 }

@@ -26,7 +26,15 @@ protected:
 	UGSpawnControlComponent* SpawnControlComp;
 
 public:
-
+	
+	virtual void OnActorKilled(AActor* Victim, AActor* Killer);
+	
 	UFUNCTION(Exec)
 	void KillAll();
+
+protected:
+
+	UFUNCTION()
+	void RespawnTimerElapsed(APlayerController* PC);
+	
 };

@@ -175,6 +175,7 @@ void AGCharacter::OnHealthChanged(AActor* InstigatorActor, UGAttributeComponent*
 	{
 		DamagedFlash();
 	}
+	// 角色死亡
 	if(NewHealth<=0.0f && Delta<0.0f)
 	{
 		APlayerController* PC = Cast<APlayerController>(GetController());
