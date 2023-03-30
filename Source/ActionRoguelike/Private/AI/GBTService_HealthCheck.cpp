@@ -3,7 +3,7 @@
 
 #include "AI/GBTService_HealthCheck.h"
 #include "AIController.h"
-#include "GBlueprintFunctionLibrary.h"
+#include "GGameplayFunctionLibrary.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Components/GAttributeComponent.h"
 #include "Kismet/GameplayStatics.h"

@@ -104,6 +104,8 @@ protected:
 	
 	virtual void PostInitializeComponents() override;
 
+	void Die();
+
 public:
 	UFUNCTION(Exec)
 	void HealSelf(float Amount = 100);

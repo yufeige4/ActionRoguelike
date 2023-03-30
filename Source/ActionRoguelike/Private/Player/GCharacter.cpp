@@ -5,6 +5,7 @@
 
 #include "DrawDebugHelpers.h"
 #include "Chaos/Private/kDOP.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -178,8 +179,7 @@ void AGCharacter::OnHealthChanged(AActor* InstigatorActor, UGAttributeComponent*
 	// 角色死亡
 	if(NewHealth<=0.0f && Delta<0.0f)
 	{
-		APlayerController* PC = Cast<APlayerController>(GetController());
-		DisableInput(PC);
+		Die();
 	}
 }
 
@@ -193,6 +193,15 @@ void AGCharacter::PostInitializeComponents()
 	Super::PostInitializeComponents();
 
 	AttributeComp->OnHealthChanged.AddDynamic(this,&AGCharacter::OnHealthChanged);
+}
+
+void AGCharacter::Die()
+{
+	APlayerController* PC = Cast<APlayerController>(GetController());
+	DisableInput(PC);
+	auto CapsuleComp = GetCapsuleComponent();
+	CapsuleComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	GetCharacterMovement()->DisableMovement();
 }
 
 

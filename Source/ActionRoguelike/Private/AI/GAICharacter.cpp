@@ -9,6 +9,7 @@
 #include "AI/BTTask_RecoverHealth.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "UI/GUserWidget_World.h"
 
 // Sets default values
@@ -17,8 +18,12 @@ AGAICharacter::AGAICharacter()
 	AttributeComp = CreateDefaultSubobject<UGAttributeComponent>("AttributeComp");
 	PawnSensingComp = CreateDefaultSubobject<UPawnSensingComponent>("PawnSensingComp");
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
-	RandomAttackOffset = 2.0f;
+	// Temporary
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_WorldDynamic,ECR_Ignore);
+	GetMesh()->SetGenerateOverlapEvents(true);
+	
 
+	RandomAttackOffset = 2.0f;
 	TimeToHit = "TimeToHit";
 }
 
@@ -49,8 +54,9 @@ void AGAICharacter::Die()
 	// Ragdoll
 	GetMesh()->SetAllBodiesSimulatePhysics(true);
 	GetMesh()->SetCollisionProfileName("Ragdoll"); 
-	Cast<UCapsuleComponent>(RootComponent)->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		
+	// Set Capsule Collision correctly
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	GetCharacterMovement()->DisableMovement();
 	// SetLifeSpan
 	SetLifeSpan(10.0f);
 }

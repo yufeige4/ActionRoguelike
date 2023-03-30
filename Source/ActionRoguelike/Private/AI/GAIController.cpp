@@ -5,7 +5,7 @@
 
 #include <string>
 
-#include "GBlueprintFunctionLibrary.h"
+#include "GGameplayFunctionLibrary.h"
 #include "AI/GAICharacterInterface.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Kismet/GameplayStatics.h"

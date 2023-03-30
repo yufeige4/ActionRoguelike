@@ -49,7 +49,9 @@ void UGInteractionComponent::PrimaryInteract()
 	FRotator CameraRotation;
 	// 原来有缺陷 因为第三人称摄像机看向的位置和眼睛的位置不一样
 	// 现已优化 使用相机的位置和方向作为发射射线检测的依据
+	// MyOwner->GetActorEyesViewPoint(CameraLocation,CameraRotation);
 	AGCharacter* MyCharacter = Cast<AGCharacter>(MyOwner);
+	
 	MyCharacter->GetCameraViewPoint(CameraLocation,CameraRotation);
 
 	End = CameraLocation + (CameraRotation.Vector()*500);

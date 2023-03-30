@@ -3,8 +3,10 @@
 
 #include "Projectiles/GMagicProjectile.h"
 
+#include "GGameplayFunctionLibrary.h"
 #include "Components/GAttributeComponent.h"
 #include "AudioMixerXAudio2/Private/AudioMixerPlatformXAudio2.h"
+#include "Core/GGameplayInterface.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
 
@@ -49,12 +51,15 @@ void AGMagicProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent,
 {
 	if(OtherActor && OtherActor!=GetInstigator())
 	{
-		UGAttributeComponent* AttributeComp = UGAttributeComponent::GetAttributeComponent(OtherActor);
+		/*UGAttributeComponent* AttributeComp = UGAttributeComponent::GetAttributeComponent(OtherActor);
 		if(AttributeComp)
 		{
 			AttributeComp->ApplyHealthChange(GetInstigator(),-DamageAmount);
+		}*/
+		if(UGGameplayFunctionLibrary::ApplyDirectionalDamage(GetInstigator(),OtherActor,-DamageAmount,SweepResult))
+		{
+			Explode();
 		}
-		Explode();
 	}
 }
 
