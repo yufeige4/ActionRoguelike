@@ -1,7 +1,7 @@
 # Action Roguelike Game (Course Project)
 
 This project is part of the **[Professional Game Development in C++ and Unreal Engine](https://courses.tomlooman.com/p/unrealengine-cpp?coupon_code=COMMUNITY15&src=github)** Course where I build this project step-by-step.
-Here is the lecture notes I took during the course: https://github.com/yufeige4/ActionRoguelike/tree/main/LectureNotes
+Here is the lecture notes and developmment logs during the course: https://github.com/yufeige4/ActionRoguelike/tree/main/LectureNotes
 
 **Current Engine Version: 4.27**
 
