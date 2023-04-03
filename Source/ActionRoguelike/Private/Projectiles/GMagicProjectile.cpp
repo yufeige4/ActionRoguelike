@@ -4,6 +4,7 @@
 #include "Projectiles/GMagicProjectile.h"
 
 #include "GGameplayFunctionLibrary.h"
+#include "InputBehavior.h"
 #include "Components/GAttributeComponent.h"
 #include "AudioMixerXAudio2/Private/AudioMixerPlatformXAudio2.h"
 #include "Core/GGameplayInterface.h"
@@ -56,6 +57,11 @@ void AGMagicProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent,
 		{
 			AttributeComp->ApplyHealthChange(GetInstigator(),-DamageAmount);
 		}*/
+		if(IgnoreActors.Find(OtherActor)!=INDEX_NONE)
+		{
+			return;
+		}
+		IgnoreActors.Push(OtherActor);
 		if(UGGameplayFunctionLibrary::ApplyDirectionalDamage(GetInstigator(),OtherActor,-DamageAmount,SweepResult))
 		{
 			Explode();

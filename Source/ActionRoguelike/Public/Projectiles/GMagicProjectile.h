@@ -18,6 +18,9 @@ public:
 	
 	virtual void BeginPlay() override;
 
+private:
+	
+	TArray<AActor*> IgnoreActors;
 
 protected:
 	

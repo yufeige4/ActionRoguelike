@@ -74,7 +74,10 @@ void ARespawnedInteractableBase::Respawn()
 	MeshComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	MeshComp->SetHiddenInGame(false,true);
 	CanInteract = true;
-	GEngine->AddOnScreenDebugMessage(0,2,FColor::Silver,"Respawned!");
+	if(DebugInteractable.GetValueOnGameThread())
+	{
+		GEngine->AddOnScreenDebugMessage(0,2,FColor::Silver,"Respawned!");
+	}
 }
 
 

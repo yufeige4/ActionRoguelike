@@ -3,10 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/GSpawnControlComponent.h"
 #include "GameFramework/GameModeBase.h"
 #include "GGameModeBase.generated.h"
 
+class UGEventManager;
+class UGSpawnControlComponent;
 /**
  * 
  */
@@ -25,9 +26,10 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UGSpawnControlComponent* SpawnControlComp;
 
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UGEventManager* EventManager;
+
 public:
-	
-	virtual void OnActorKilled(AActor* Victim, AActor* Killer);
 	
 	UFUNCTION(Exec)
 	void KillAll();

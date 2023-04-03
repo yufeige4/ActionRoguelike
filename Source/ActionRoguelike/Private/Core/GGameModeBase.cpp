@@ -5,33 +5,22 @@
 
 #include "EngineUtils.h"
 #include "AI/GAICharacter.h"
+#include "Components/GEventManager.h"
+#include "Components/GSpawnControlComponent.h"
 #include "Player/GCharacter.h"
 
+TAutoConsoleVariable<bool> ShowEventLog(TEXT("ARPG.ShowEventLog"),false,TEXT("Display Event Log"),ECVF_Cheat);
 
 AGGameModeBase::AGGameModeBase()
 {
 	SpawnControlComp = CreateDefaultSubobject<UGSpawnControlComponent>("SpawnControlComp");
+	EventManager = CreateDefaultSubobject<UGEventManager>("EventManager");
 }
 
 void AGGameModeBase::StartPlay()
 {
 	Super::StartPlay();
 	SpawnControlComp->SpawnObjects();
-}
-
-void AGGameModeBase::OnActorKilled(AActor* Victim, AActor* Killer)
-{
-	AGCharacter* Player = Cast<AGCharacter>(Victim);
-	if(Player)
-	{
-		FTimerHandle TimerHandle_RespawnPlayer;
-		FTimerDelegate TimerDelegate_RespawnPlayer;
-		TimerDelegate_RespawnPlayer.BindUFunction(this,"RespawnTimerElapsed",Player->GetController());
-		float RespawnDelay = 5.0f;
-		
-		GetWorldTimerManager().SetTimer(TimerHandle_RespawnPlayer,TimerDelegate_RespawnPlayer,RespawnDelay,false);
-	}
-	UE_LOG(LogTemp,Log,TEXT("OnActorKilled: Victim: %s, Killer: %s"),*GetNameSafe(Victim),*GetNameSafe(Killer));
 }
 
 void AGGameModeBase::KillAll()

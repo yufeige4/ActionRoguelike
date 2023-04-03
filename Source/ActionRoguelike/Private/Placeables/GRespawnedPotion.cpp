@@ -5,6 +5,7 @@
 
 #include "DrawDebugHelpers.h"
 #include "Components/GAttributeComponent.h"
+#include "Components/GEventManager.h"
 #include "Kismet/GameplayStatics.h"
 
 AGRespawnedPotion::AGRespawnedPotion()
@@ -25,13 +26,23 @@ void AGRespawnedPotion::Interact_Implementation(APawn* InstigatorPawn)
 			{
 				UGameplayStatics::SpawnEmitterAttached(HealingEffect,InstigatorMesh,NAME_None,FVector(ForceInit),FRotator::ZeroRotator,FVector(1),EAttachLocation::SnapToTarget);
 			}
+			
 			UGameplayStatics::PlaySoundAtLocation(GetWorld(),HealingSound,InstigatorPawn->GetActorLocation(),InstigatorPawn->GetActorRotation());
 			AttributeComp->ApplyHealthChange(this,HealingAmount);
+			// Broadcast Event
+			auto EventManger = UGEventManager::GetEventManager(this);
+			if(EventManger)
+			{
+				EventManger->OnItemUsed(InstigatorPawn,this);
+			}
 			
 			Super::Interact_Implementation(InstigatorPawn);
 		}else
 		{
-			DrawDebugString(GetWorld(),GetActorLocation(),"Invalid Interact! No AttributeComp or full health!",nullptr,FColor::Red,4,true);
+			if(DebugInteractable.GetValueOnGameThread())
+			{
+				DrawDebugString(GetWorld(),GetActorLocation(),"Invalid Interact! No AttributeComp or full health!",nullptr,FColor::Red,4,true);
+			}
 		}
 	}
 }

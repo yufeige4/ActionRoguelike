@@ -10,6 +10,9 @@
 UENUM()
 enum class EInteractType : uint8 {DoNothing, HiddenAfterInteract, DestroyAfterInteract};
 
+// for debugging
+static TAutoConsoleVariable<bool> DebugInteractable(TEXT("ARPG.DebugInteractable"),false,TEXT("Show debug info for Interactables"),ECVF_Cheat);
+
 UCLASS()
 class ACTIONROGUELIKE_API ARespawnedInteractableBase : public AActor, public IGGameplayInterface
 {

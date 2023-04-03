@@ -2,6 +2,8 @@
 
 
 #include "Components/GAttributeComponent.h"
+
+#include "Components/GEventManager.h"
 #include "Core/GGameModeBase.h"
 
 static TAutoConsoleVariable<float> CVarDamageMultiplier(TEXT("ARPG.DamageMultiplier"),1.0f,TEXT("Global ratio of damage dealing"),ECVF_Cheat);
@@ -33,10 +35,11 @@ bool UGAttributeComponent::ApplyHealthChange(AActor* Instigator, float Delta)
 	// Died
 	if(AcutualDelta<0.0f && CurrHealth==0.0f)
 	{
-		auto GM = GetWorld()->GetAuthGameMode<AGGameModeBase>();
-		if(GM)
+		auto Owner = GetOwner();
+		auto EventManager = UGEventManager::GetEventManager(Owner);
+		if(EventManager)
 		{
-			GM->OnActorKilled(GetOwner(),Instigator);
+			EventManager->OnActorKilled(Owner,Instigator);
 		}
 	}
 	
