@@ -6,6 +6,7 @@
 #include "DrawDebugHelpers.h"
 #include "Chaos/Private/kDOP.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/GActionComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -32,8 +33,9 @@ AGCharacter::AGCharacter()
 	InteractionComp = CreateDefaultSubobject<UGInteractionComponent>("InteractionComp");
 	// 添加属性组件
 	AttributeComp = CreateDefaultSubobject<UGAttributeComponent>("AttributeComp");
-
-	AttackAnimDelay = 0.5f;
+	// 添加Action组件
+	ActionComp = CreateDefaultSubobject<UGActionComponent>("ActionComp");
+	
 	TimeToHit = "TimeToHit";
 }
 
@@ -74,39 +76,29 @@ void AGCharacter::MoveRight(float val)
 	AddMovementInput(RightVector,val);
 }
 
-void AGCharacter::FireBallAttack_TimeElapsed()
+void AGCharacter::SprintStart()
 {
-	SpawnProjectile(ProjectileClass);
+	ActionComp->StartActionByName(this,"sprint");
 }
 
-void AGCharacter::FireStormAttack_TimeElapsed()
+void AGCharacter::SprintEnd()
 {
-	SpawnProjectile(FireStormProjectileClass);
-}
-
-void AGCharacter::Dash_TimeElapsed()
-{
-	SpawnProjectile(DashProjectileClass);
+	ActionComp->StopActionByName(this,"sprint");
 }
 
 void AGCharacter::PrimaryAttack()
 {
-	PlayAnimMontage(AttackAnim);
-	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack,this,&AGCharacter::FireBallAttack_TimeElapsed,AttackAnimDelay);
-	// 用于当玩家死亡时 取消攻击判定
-	// GetWorldTimerManager().ClearTimer(TimerHandle_PrimaryAttack);
+	ActionComp->StartActionByName(this,"FireBallAttack");
 }
 
 void AGCharacter::SpecialAttack()
 {
-	PlayAnimMontage(AttackAnim);
-	GetWorldTimerManager().SetTimer(TimerHandle_SpecialAttack,this,&AGCharacter::FireStormAttack_TimeElapsed,AttackAnimDelay);
+	ActionComp->StartActionByName(this,"FireStormAttack");
 }
 
 void AGCharacter::Dash()
 {
-	PlayAnimMontage(AttackAnim);
-	GetWorldTimerManager().SetTimer(TimerHandle_Dash,this,&AGCharacter::Dash_TimeElapsed,AttackAnimDelay);
+	ActionComp->StartActionByName(this,"Dash");
 }
 
 void AGCharacter::PrimaryInteract()
@@ -114,59 +106,6 @@ void AGCharacter::PrimaryInteract()
 	if(InteractionComp!=nullptr)
 	{
 		InteractionComp->PrimaryInteract();
-	}
-}
-
-void AGCharacter::SpawnProjectile(TSubclassOf<AActor> ClassToSpawn)
-{
-	// make sure the projectile is set up
-	if(ensureAlways(ClassToSpawn))
-	{
-		// 设置从手指处出现projectile
-		FVector HandLocation =  GetMesh()->GetSocketLocation("RightHandMiddle4");
-		// 计算射线检测的参数
-		FVector CameraLocation;
-		FRotator CameraRotation;
-		this->GetCameraViewPoint(CameraLocation,CameraRotation);
-		FVector EndLocation = CameraLocation + (CameraRotation.Vector()*3000);
-		
-		FCollisionObjectQueryParams ObjectQueryParams;
-		ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldDynamic);
-		ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldStatic);
-		ObjectQueryParams.AddObjectTypesToQuery(ECC_Pawn);
-		// 射线检测忽略自身
-		FCollisionQueryParams Params;
-		Params.AddIgnoredActor(this);
-		// 设置碰撞球体检测参数
-		FCollisionShape Shape;
-		Shape.SetSphere(20.0f);
-
-		
-		FHitResult Hit;
-		bool bBlockingHit = GetWorld()->SweepSingleByObjectType(Hit,CameraLocation,EndLocation,FQuat::Identity,ObjectQueryParams,Shape,Params);
-		FVector ImpactLocation = EndLocation;
-		if(bBlockingHit)
-		{
-			// 命中
-			ImpactLocation = Hit.ImpactPoint;
-		}
-		// 使用命中位置和手的位置来计算火球方向
-		FRotator SpawnRotation = FRotationMatrix::MakeFromX(ImpactLocation-HandLocation).Rotator();
-
-		// FColor LineColor = bBlockingHit ? FColor::Green : FColor::Red;
-		// DrawDebugLine(GetWorld(),CameraLocation,EndLocation,LineColor,false,2.0f,0,2.0f);
-	
-		// set up spawn transform for projectile
-		FTransform SpawnTransformMat = FTransform(SpawnRotation,HandLocation);
-
-		// spawn parameters
-		// Projectile忽略角色本身
-		FActorSpawnParameters SpawnParams;
-		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-		SpawnParams.Instigator = this;
-		
-		// 从世界场景中生成该Projectile
-		GetWorld()->SpawnActor<AActor>(ClassToSpawn,SpawnTransformMat,SpawnParams);
 	}
 }
 
@@ -204,7 +143,6 @@ void AGCharacter::Die()
 	GetCharacterMovement()->DisableMovement();
 }
 
-
 void AGCharacter::jump()
 {
 	Super::Jump();
@@ -222,6 +160,10 @@ void AGCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAxis("Turn",this,&APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp",this,&APawn::AddControllerPitchInput);
 
+	// sprint
+	PlayerInputComponent->BindAction("Sprint",IE_Pressed,this,&AGCharacter::SprintStart);
+	PlayerInputComponent->BindAction("Sprint",IE_Released,this,&AGCharacter::SprintEnd);
+
 	// shooting magic projectile
 	PlayerInputComponent->BindAction("PrimaryAttack",IE_Pressed,this,&AGCharacter::PrimaryAttack);
 
@@ -234,7 +176,7 @@ void AGCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	// 使用特殊技能
 	PlayerInputComponent->BindAction("SpecialAttack",IE_Pressed,this,&AGCharacter::SpecialAttack);
 
-	// 使用Dash
+	// 使用DashProjectile
 	PlayerInputComponent->BindAction("Dash",IE_Pressed,this,&AGCharacter::Dash);
 }
 

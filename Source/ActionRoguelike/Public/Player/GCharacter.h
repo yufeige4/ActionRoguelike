@@ -13,6 +13,7 @@
 // forward declaration
 class UCameraComponent;
 class USpringArmComponent;
+class UGActionComponent;
 
 UCLASS()
 class ACTIONROGUELIKE_API AGCharacter : public ACharacter
@@ -27,19 +28,21 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Components")
 	USpringArmComponent* SpringArmComp;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UCameraComponent* CameraComp;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UGInteractionComponent* InteractionComp;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UGAttributeComponent* AttributeComp;
 
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UGActionComponent* ActionComp;
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -51,38 +54,18 @@ public:
 	void GetCameraViewPoint(FVector& CameraPosition,FRotator& CameraRotation);
 
 protected:
-	
-	UPROPERTY(EditAnywhere,Category = "Attack")
-	TSubclassOf<AActor> ProjectileClass;
-
-	UPROPERTY(EditAnywhere,Category = "Attack")
-	TSubclassOf<AActor> FireStormProjectileClass;
-
-	UPROPERTY(EditAnywhere,Category = "Attack")
-	TSubclassOf<AActor> DashProjectileClass;
-
-	UPROPERTY(EditAnywhere,Category = "Attack")
-	UAnimMontage* AttackAnim;
 
 	UPROPERTY(VisibleDefaultsOnly,Category = "Effects")
 	FName TimeToHit;
 
 	void MoveForward(float val);
 	void MoveRight(float val);
+
+	void SprintStart();
+	void SprintEnd();
 	
 	// jump
 	void jump();
-
-
-	float AttackAnimDelay;
-
-	FTimerHandle TimerHandle_PrimaryAttack;
-	FTimerHandle TimerHandle_SpecialAttack;
-	FTimerHandle TimerHandle_Dash;
-	
-	void FireBallAttack_TimeElapsed();
-	void FireStormAttack_TimeElapsed();
-	void Dash_TimeElapsed();
 	
 	// shoot fireball projectile
 	void PrimaryAttack();
@@ -93,9 +76,6 @@ protected:
 	
 	// Interact function
 	void PrimaryInteract();
-
-	// extract common part of spawn projectile
-	void SpawnProjectile(TSubclassOf<AActor> ClassToSpawn);
 
 	UFUNCTION()
 	void OnHealthChanged(AActor* InstigatorActor, UGAttributeComponent* OwningComp, float NewHealth, float Delta);

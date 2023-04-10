@@ -24,7 +24,9 @@ bool UGGameplayFunctionLibrary::ApplyDirectionalDamage(AActor* FromActor, AActor
 		if(HitComp && HitComp->IsSimulatingPhysics(HitResult.BoneName))
 		{
 			float ImpulseMagnitude = 100000.0f;
-			FVector ImpulseDirection = -HitResult.ImpactNormal;
+			// FVector ImpulseDirection = -HitResult.ImpactNormal;
+			FVector ImpulseDirection = HitResult.TraceEnd-HitResult.TraceStart;
+			ImpulseDirection.Normalize();
 			HitComp->AddImpulseAtLocation(ImpulseDirection*ImpulseMagnitude,HitResult.ImpactPoint,HitResult.BoneName);
 		}
 		return true;

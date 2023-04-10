@@ -2,14 +2,11 @@
 
 
 #include "Core/GGameModeBase.h"
-
 #include "EngineUtils.h"
 #include "AI/GAICharacter.h"
 #include "Components/GEventManager.h"
 #include "Components/GSpawnControlComponent.h"
 #include "Player/GCharacter.h"
-
-TAutoConsoleVariable<bool> ShowEventLog(TEXT("ARPG.ShowEventLog"),false,TEXT("Display Event Log"),ECVF_Cheat);
 
 AGGameModeBase::AGGameModeBase()
 {
