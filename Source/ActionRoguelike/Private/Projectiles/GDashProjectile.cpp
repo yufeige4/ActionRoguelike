@@ -3,6 +3,7 @@
 
 #include "Projectiles/GDashProjectile.h"
 
+#include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
 

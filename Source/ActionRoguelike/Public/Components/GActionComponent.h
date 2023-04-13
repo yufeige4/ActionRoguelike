@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "Components/ActorComponent.h"
 #include "GActionComponent.generated.h"
 
@@ -17,6 +18,9 @@ class ACTIONROGUELIKE_API UGActionComponent : public UActorComponent
 public:
 	
 	UGActionComponent();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tags")
+	FGameplayTagContainer ActiveGameplayTags;
 
 protected:
 	
@@ -38,6 +42,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Actions")
 	bool StopActionByName(AActor* Instigator, FName ActionName);
+
+	UFUNCTION(BlueprintCallable, Category = "Actions")
+	static UGActionComponent* GetActionComponent(AActor* Actor);
 
 protected:
 	

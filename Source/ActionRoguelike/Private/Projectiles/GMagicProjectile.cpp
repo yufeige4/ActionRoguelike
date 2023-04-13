@@ -2,12 +2,11 @@
 
 
 #include "Projectiles/GMagicProjectile.h"
-
 #include "GGameplayFunctionLibrary.h"
-#include "InputBehavior.h"
-#include "Components/GAttributeComponent.h"
 #include "AudioMixerXAudio2/Private/AudioMixerPlatformXAudio2.h"
-#include "Core/GGameplayInterface.h"
+#include "Components/GActionComponent.h"
+#include "Components/SphereComponent.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
 
@@ -57,6 +56,16 @@ void AGMagicProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent,
 		{
 			AttributeComp->ApplyHealthChange(GetInstigator(),-DamageAmount);
 		}*/
+		UGActionComponent* ActionComp = UGActionComponent::GetActionComponent(OtherActor);
+		if(ActionComp && ActionComp->ActiveGameplayTags.HasTag(ParryTag))
+		{
+			// 识别到反弹BUFF
+			MoveComp->Velocity = -MoveComp->Velocity;
+			// 改变魔法导弹的所有权
+			SetInstigator(Cast<APawn>(OtherActor));
+			return;
+		}
+		
 		if(IgnoreActors.Find(OtherActor)!=INDEX_NONE)
 		{
 			return;

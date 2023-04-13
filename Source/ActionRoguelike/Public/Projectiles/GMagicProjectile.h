@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "GProjectileBase.h"
 #include "Sound/SoundCue.h"
 #include "GMagicProjectile.generated.h"
@@ -23,6 +24,9 @@ private:
 	TArray<AActor*> IgnoreActors;
 
 protected:
+
+	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	FGameplayTag ParryTag;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	float DamageAmount;
@@ -35,7 +39,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Effects")
 	TSubclassOf<UCameraShakeBase> ImpactShake;
-	
 
 	FTimerHandle TimerHandle_selfDestroy;
 

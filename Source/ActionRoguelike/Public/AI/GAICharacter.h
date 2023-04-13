@@ -10,6 +10,7 @@
 #include "Perception/PawnSensingComponent.h"
 #include "GAICharacter.generated.h"
 
+class UGActionComponent;
 class UGUserWidget_World;
 UCLASS()
 class ACTIONROGUELIKE_API AGAICharacter : public ACharacter, public IGAICharacterInterface
@@ -22,6 +23,9 @@ public:
 
 protected:
 
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UGActionComponent* ActionComp;
+		
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UGAttributeComponent* AttributeComp;
 	

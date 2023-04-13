@@ -9,6 +9,11 @@
 /**
  * 
  */
+#ifndef DEBUG_ACTION_TAG
+#define DEBUG_ACTION_TAG
+static TAutoConsoleVariable<bool> DebugActionTag(TEXT("ARPG.ShowActionTag"),false,TEXT("show action tag debug message on screen"),ECVF_Cheat);
+#endif
+
 UENUM(BlueprintType)
 enum class EAIState : uint8
 {

@@ -9,6 +9,7 @@
 #include "AI/BTTask_RecoverHealth.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/GActionComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "UI/GUserWidget_World.h"
 
@@ -17,6 +18,7 @@ AGAICharacter::AGAICharacter()
 {
 	AttributeComp = CreateDefaultSubobject<UGAttributeComponent>("AttributeComp");
 	PawnSensingComp = CreateDefaultSubobject<UPawnSensingComponent>("PawnSensingComp");
+	ActionComp = CreateDefaultSubobject<UGActionComponent>("ActionComp");
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 	// Temporary
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_WorldDynamic,ECR_Ignore);

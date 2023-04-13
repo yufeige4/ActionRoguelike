@@ -3,12 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/SphereComponent.h"
-#include "Components/AudioComponent.h"
 #include "GameFramework/Actor.h"
-#include "GameFramework/ProjectileMovementComponent.h"
-#include "UObject/NiagaraObjectVersion.h"
 #include "GProjectileBase.generated.h"
+
+class UParticleSystem;
+class UProjectileMovementComponent;
+class UParticleSystemComponent;
+class UAudioComponent;
+class USphereComponent;
 
 UCLASS(Abstract)
 class ACTIONROGUELIKE_API AGProjectileBase : public AActor
