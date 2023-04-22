@@ -7,6 +7,7 @@
 #include "Core/GGameModeBase.h"
 
 static TAutoConsoleVariable<bool> ShowEventLog(TEXT("ARPG.ShowEventLog"),false,TEXT("Display Event Log"),ECVF_Cheat);
+
 // Sets default values for this component's properties
 UGEventManager::UGEventManager()
 {
@@ -27,16 +28,6 @@ UGEventManager* UGEventManager::GetEventManager(AActor* Actor)
 
 void UGEventManager::OnActorKilled(AActor* Victim, AActor* Killer)
 {
-	AGCharacter* Player = Cast<AGCharacter>(Victim);
-	if(Player)
-	{
-		FTimerHandle TimerHandle_RespawnPlayer;
-		FTimerDelegate TimerDelegate_RespawnPlayer;
-		TimerDelegate_RespawnPlayer.BindUFunction(this,"RespawnTimerElapsed",Player->GetController());
-		float RespawnDelay = 5.0f;
-		// 复活定定时器
-		GetWorld()->GetTimerManager().SetTimer(TimerHandle_RespawnPlayer,TimerDelegate_RespawnPlayer,RespawnDelay,false);
-	}
 
 	OnKillActor.Broadcast(Victim,Killer);
 	

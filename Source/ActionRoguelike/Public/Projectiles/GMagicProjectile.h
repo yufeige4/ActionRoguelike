@@ -8,6 +8,8 @@
 #include "Sound/SoundCue.h"
 #include "GMagicProjectile.generated.h"
 
+class UGActionEffect;
+
 UCLASS()
 class ACTIONROGUELIKE_API AGMagicProjectile : public AGProjectileBase
 {
@@ -24,13 +26,16 @@ private:
 	TArray<AActor*> IgnoreActors;
 
 protected:
-
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	FGameplayTag ParryTag;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	float DamageAmount;
-
+	// for applied debuff effect
+	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	TSubclassOf<UGActionEffect> AppliedEffect;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Basic")
 	float TimeToSelfDestroy;
 

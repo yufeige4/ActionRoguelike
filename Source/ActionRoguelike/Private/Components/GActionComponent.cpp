@@ -15,7 +15,8 @@ void UGActionComponent::BeginPlay()
 	Super::BeginPlay();
 	for(TSubclassOf<UGAction> Action : DefaultActions)
 	{
-		AddAction(Action);
+		// add from default actions should consider owner of comp as Instigator
+		AddAction(Action,GetOwner());
 	}
 }
 
@@ -33,7 +34,7 @@ void UGActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 	}
 }
 
-void UGActionComponent::AddAction(TSubclassOf<UGAction> ActionClass)
+void UGActionComponent::AddAction(TSubclassOf<UGAction> ActionClass, AActor* Instigator)
 {
 	if(!ensure(ActionClass))
 	{
@@ -44,7 +45,20 @@ void UGActionComponent::AddAction(TSubclassOf<UGAction> ActionClass)
 	if(ensure(NewAction))
 	{
 		Actions.Add(NewAction);
+		if(NewAction->bAutoStart && ensure(NewAction->CanStart(Instigator)))
+		{
+			NewAction->StartAction(Instigator);
+		}
 	}
+}
+
+void UGActionComponent::RemoveAction(UGAction* Action)
+{
+	if(!ensure(Action && !Action->IsRunning()))
+	{
+		return;
+	}
+	Actions.Remove(Action);
 }
 
 bool UGActionComponent::StartActionByName(AActor* Instigator, FName ActionName)

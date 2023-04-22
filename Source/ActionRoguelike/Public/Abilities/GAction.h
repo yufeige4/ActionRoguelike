@@ -20,6 +20,9 @@ public:
 	// nickname of an action
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	FName ActionName;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Action")
+	bool bAutoStart;
 	
 protected:
 	// Tags added to owning actor
@@ -32,6 +35,8 @@ protected:
 	bool bIsRunning;
 	
 public:
+
+	UGAction();
 	// functions
 	UFUNCTION(BlueprintNativeEvent, Category = "Action")
 	bool CanStart(AActor* Instigator);

@@ -7,7 +7,7 @@
 #include "GEventManager.generated.h"
 
 // 代理声明
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnKillActor, AActor*, Killer, AActor*, Victim);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnKillActor, AActor*, Victim, AActor*, Killer);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUseItem, AActor*, User, AActor*, Item);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnPickUpItem, AActor*, Picker, AActor*, Item);
 

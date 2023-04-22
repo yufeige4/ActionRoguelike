@@ -36,6 +36,26 @@ void AGGameModeBase::KillAll()
 	}
 }
 
+void AGGameModeBase::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	EventManager->OnKillActor.AddDynamic(this,&AGGameModeBase::OnActorKilled);
+}
+
+void AGGameModeBase::OnActorKilled(AActor* Victim, AActor* Killer)
+{
+	AGCharacter* Player = Cast<AGCharacter>(Victim);
+	if(Player)
+	{
+		FTimerHandle TimerHandle_RespawnPlayer;
+		FTimerDelegate TimerDelegate_RespawnPlayer;
+		TimerDelegate_RespawnPlayer.BindUFunction(this,"RespawnTimerElapsed",Player->GetController());
+		float RespawnDelay = 5.0f;
+		// 复活定定时器
+		GetWorld()->GetTimerManager().SetTimer(TimerHandle_RespawnPlayer,TimerDelegate_RespawnPlayer,RespawnDelay,false);
+	}
+}
+
 void AGGameModeBase::RespawnTimerElapsed(APlayerController* PC)
 {
 	if(ensure(PC))

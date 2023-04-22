@@ -15,6 +15,9 @@ UGInteractionComponent::UGInteractionComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
+	TraceDistance = 500.0f;
+	TraceRadius = 30.0f;
+	CollisionChannel = ECC_WorldDynamic;
 	// ...
 }
 
@@ -23,23 +26,112 @@ UGInteractionComponent::UGInteractionComponent()
 void UGInteractionComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
+	 
 	// ...
 	
 }
 
 
-// Called every frame
+void UGInteractionComponent::FindBestInteractable()
+{
+	FCollisionObjectQueryParams ObjectQueryParams;
+	ObjectQueryParams.AddObjectTypesToQuery(CollisionChannel);
+	
+	FVector End;
+	
+	AActor* MyOwner = GetOwner();
+	FVector CameraLocation;
+	FRotator CameraRotation;
+	
+	AGCharacter* MyCharacter = Cast<AGCharacter>(MyOwner);
+	MyCharacter->GetCameraViewPoint(CameraLocation,CameraRotation);
+
+	End = CameraLocation + (CameraRotation.Vector()*TraceDistance);
+	FCollisionShape Shape;
+	Shape.SetSphere(TraceRadius);
+	TArray<FHitResult> Hits;
+	bool bBlockingHit = GetWorld()->SweepMultiByObjectType(Hits,CameraLocation,End,FQuat::Identity,ObjectQueryParams,Shape);
+	// Debug color
+	FColor LineColor = bBlockingHit ? FColor::Green : FColor::Red;
+	bool bDebugDraw = CVarInteractionDrawDebug.GetValueOnGameThread();
+
+	// 清空之前保存的Focus并重新搜索
+	FocusedActor = nullptr;
+	
+	for(FHitResult Hit : Hits)
+	{
+		AActor* HitActor = Hit.GetActor();
+		if(HitActor!=nullptr)
+		{
+			// 如果该Actor实现了这个接口
+			if(HitActor->Implements<UGGameplayInterface>())
+			{
+				FocusedActor = HitActor;
+				break;
+			}
+		}
+		// Debug Purpose
+		if(bDebugDraw)
+		{
+			DrawDebugSphere(GetWorld(),Hit.ImpactPoint,TraceRadius,32,LineColor,false,2.0f);
+		}
+	}
+
+	if(FocusedActor)
+	{
+		// 若当前未实例化过并且widget类被指定
+		if(!HintWidgetInstance && ensure(HintWidgetClass))
+		{
+			HintWidgetInstance = CreateWidget<UGUserWidget_World>(GetWorld(),HintWidgetClass);
+		}
+		if(HintWidgetInstance)
+		{
+			// attach到相应的actor上, 如果未在视口中则添加到视口
+			HintWidgetInstance->AttachedActor = FocusedActor;
+			if(!HintWidgetInstance->IsInViewport())
+			{
+				HintWidgetInstance->AddToViewport();
+			}
+		}
+	}else
+	{
+		// 交互物超出范围, 提示消失
+		if(HintWidgetInstance && HintWidgetInstance->IsInViewport())
+		{
+			HintWidgetInstance->RemoveFromParent();
+		}
+	}
+	// Debug purpose
+	if(bDebugDraw)
+	{
+		DrawDebugLine(GetWorld(),CameraLocation,End,LineColor,false,2.0f,0,2.0f);
+	}
+}
+
+// Called every fame
 void UGInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	FindBestInteractable();
+	
 }
 
 void UGInteractionComponent::PrimaryInteract()
 {
-	FCollisionObjectQueryParams ObjectQueryParams;
+	// refactored, move tracing logic into tick
+	if(FocusedActor==nullptr)
+	{
+		if(CVarInteractionDrawDebug.GetValueOnGameThread())
+		{
+			GEngine->AddOnScreenDebugMessage(-1,1.0f,FColor::Red,"No FocusedActor to Interact");
+		}
+		return;
+	}
+	APawn* MyPawn = Cast<APawn>(GetOwner());
+	// 调用接口
+	IGGameplayInterface::Execute_Interact(FocusedActor,MyPawn);
+	/*FCollisionObjectQueryParams ObjectQueryParams;
 	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldDynamic);
 	
 	FVector End;
@@ -70,7 +162,7 @@ void UGInteractionComponent::PrimaryInteract()
 			// 调用接口
 			IGGameplayInterface::Execute_Interact(HitActor,MyPawn);
 		}
-	}*/	
+	}#1#	
 	FCollisionShape Shape;
 	float Radius = 30.0f;
 	Shape.SetSphere(Radius);
@@ -106,6 +198,6 @@ void UGInteractionComponent::PrimaryInteract()
 	if(bDebugDraw)
 	{
 		DrawDebugLine(GetWorld(),CameraLocation,End,LineColor,false,2.0f,0,2.0f);
-	}
+	}*/
 }
 

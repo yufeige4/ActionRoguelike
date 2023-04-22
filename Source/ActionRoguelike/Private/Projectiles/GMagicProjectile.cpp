@@ -9,6 +9,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "Abilities/GActionEffect.h"
 
 // Sets default values
 AGMagicProjectile::AGMagicProjectile()
@@ -51,11 +52,6 @@ void AGMagicProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent,
 {
 	if(OtherActor && OtherActor!=GetInstigator())
 	{
-		/*UGAttributeComponent* AttributeComp = UGAttributeComponent::GetAttributeComponent(OtherActor);
-		if(AttributeComp)
-		{
-			AttributeComp->ApplyHealthChange(GetInstigator(),-DamageAmount);
-		}*/
 		UGActionComponent* ActionComp = UGActionComponent::GetActionComponent(OtherActor);
 		if(ActionComp && ActionComp->ActiveGameplayTags.HasTag(ParryTag))
 		{
@@ -71,8 +67,14 @@ void AGMagicProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent,
 			return;
 		}
 		IgnoreActors.Push(OtherActor);
+
 		if(UGGameplayFunctionLibrary::ApplyDirectionalDamage(GetInstigator(),OtherActor,-DamageAmount,SweepResult))
 		{
+			if(ActionComp && AppliedEffect)
+			{
+				// 添加Debuff
+				ActionComp->AddAction(AppliedEffect,GetInstigator());
+			}
 			Explode();
 		}
 	}

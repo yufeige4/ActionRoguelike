@@ -36,6 +36,11 @@ public:
 
 protected:
 
+	virtual void PostInitializeComponents() override;
+
+	UFUNCTION()
+	void OnActorKilled(AActor* Victim, AActor* Killer);
+	
 	UFUNCTION()
 	void RespawnTimerElapsed(APlayerController* PC);
 	

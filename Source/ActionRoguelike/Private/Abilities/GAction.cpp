@@ -49,6 +49,12 @@ UGActionComponent* UGAction::GetOwningActionComp() const
 	return Cast<UGActionComponent>(GetOuter());
 }
 
+UGAction::UGAction()
+{
+	bIsRunning = false;
+	bAutoStart = false;
+}
+
 UWorld* UGAction::GetWorld() const
 {
 	UGActionComponent* ActionComp = Cast<UGActionComponent>(GetOuter());
