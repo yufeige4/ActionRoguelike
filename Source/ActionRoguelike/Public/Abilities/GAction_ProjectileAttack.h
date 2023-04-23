@@ -24,7 +24,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Attack")
 	float AttackAnimDelay;
 	
-	UPROPERTY(EditAnywhere,Category = "Attack")
+	UPROPERTY(EditAnywhere, Category = "Attack")
 	UAnimMontage* AttackAnim;
 
 	UPROPERTY(VisibleAnywhere, Category = "Effects")

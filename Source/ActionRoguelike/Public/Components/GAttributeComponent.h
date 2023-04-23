@@ -8,6 +8,7 @@
 
 // 代理声明
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnHealthChanged, AActor*, InstigatorActor, UGAttributeComponent*, OwningComp, float, NewHealth, float, Delta);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_FiveParams(FOnRageChanged, AActor*, InstigatorActor, UGAttributeComponent*, OwningComp, int32, NewRage, int32, Delta, bool, IsSuccess);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ACTIONROGUELIKE_API UGAttributeComponent : public UActorComponent
@@ -22,12 +23,29 @@ protected:
 	// 当前生命值
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
 	float CurrHealth;
-
 	// 最大生命值
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
 	float MaxHealth;
-
-public:	
+	// 当前怒气
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
+	int32 CurrRage;
+	// 愤怒值变化量
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
+	int32 RageGrowthRate;
+	// 最大怒气
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
+	int32 MaxRage;
+	
+public:
+	// 判断怒气值是否足够
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
+	bool HaveEnoughRage(int32 RageCost);
+	// 对怒气值进行修改
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
+	bool ApplyRageChange(AActor* Instigator, int32 Delta);
+	// 包含代理
+	UPROPERTY(BlueprintAssignable, Category = "Attributes")
+	FOnRageChanged OnRageChanged;
 	// 对生命值进行修改
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
 	bool ApplyHealthChange(AActor* Instigator, float Delta);
@@ -53,6 +71,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
 	float GetMaxHealth();
 
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
+	float GetMaxRage();
+	
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
 	bool Kill(AActor* Instigator);
 };

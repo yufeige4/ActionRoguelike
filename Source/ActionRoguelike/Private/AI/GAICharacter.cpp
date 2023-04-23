@@ -11,6 +11,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/GActionComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "UI/GUserWidget_World.h"
 
 // Sets default values
@@ -69,9 +70,39 @@ void AGAICharacter::SetTargetActor(AActor* Target)
 	if(AIC)
 	{
 		auto MyBB = AIC->GetBlackboardComponent();
+		DisplaySpottedPlayerWidget(Cast<AActor>(MyBB->GetValueAsObject("TargetActor")),Target);
 		MyBB->SetValueAsObject("TargetActor",Target);
 		//DrawDebugString(GetWorld(),GetActorLocation(),"Change TargetActor!!!",nullptr,FColor::White,4.0f,true);
 	}
+}
+
+void AGAICharacter::DisplaySpottedPlayerWidget(AActor* PrevTarget, AActor* CurrTarget)
+{
+	AActor* Player = UGameplayStatics::GetPlayerCharacter(GetWorld(),0);
+	if(PrevTarget == CurrTarget)
+	{
+		return;
+	}
+	if(PrevTarget==Player && PlayerSpottedWidgetInstance && PlayerSpottedWidgetInstance->IsInViewport())
+	{
+		PlayerSpottedWidgetInstance->RemoveFromParent();
+	}
+	if(CurrTarget == Player)
+	{
+		if(!PlayerSpottedWidgetInstance && ensure(PlayerSpottedWidgetClass))
+		{
+			PlayerSpottedWidgetInstance = CreateWidget<UGUserWidget_World>(GetWorld(),PlayerSpottedWidgetClass);
+		}
+		if(PlayerSpottedWidgetInstance)
+		{
+			PlayerSpottedWidgetInstance->AttachedActor = this;
+			if(!PlayerSpottedWidgetInstance->IsInViewport())
+			{
+				PlayerSpottedWidgetInstance->AddToViewport();
+			}
+		}
+	}
+	
 }
 
 

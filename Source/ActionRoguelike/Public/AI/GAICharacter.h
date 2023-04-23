@@ -57,8 +57,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<UUserWidget> HealthBarClass;
 
-	UGUserWidget_World* HealthBarInstance;
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<UGUserWidget_World> PlayerSpottedWidgetClass;
 	
+	UGUserWidget_World* HealthBarInstance;
+	UGUserWidget_World* PlayerSpottedWidgetInstance;
+		
 	FTimerHandle TimerHandle_RangeAttack;
 
 	FTimerHandle TimerHandle_Recover;
@@ -90,6 +94,8 @@ protected:
 	void Die();
 
 	void SetTargetActor(AActor* Target);
+
+	void DisplaySpottedPlayerWidget(AActor* PrevTarget, AActor* CurrTarget);
 	
 };
 

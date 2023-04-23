@@ -35,7 +35,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION(BlueprintCallable, Category = "Actions")
-	void AddAction(TSubclassOf<UGAction> ActionClass, AActor* Instigator);
+	UGAction* AddAction(TSubclassOf<UGAction> ActionClass, AActor* Instigator);
 
 	UFUNCTION(BlueprintCallable, Category = "Actions")
 	void RemoveAction(UGAction* Action);
@@ -45,7 +45,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Actions")
 	bool StopActionByName(AActor* Instigator, FName ActionName);
-
+	
 	UFUNCTION(BlueprintCallable, Category = "Actions")
 	static UGActionComponent* GetActionComponent(AActor* Actor);
 

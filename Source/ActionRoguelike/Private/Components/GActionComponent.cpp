@@ -34,11 +34,11 @@ void UGActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 	}
 }
 
-void UGActionComponent::AddAction(TSubclassOf<UGAction> ActionClass, AActor* Instigator)
+UGAction* UGActionComponent::AddAction(TSubclassOf<UGAction> ActionClass, AActor* Instigator)
 {
 	if(!ensure(ActionClass))
 	{
-		return;
+		return nullptr;
 	}
 	// UE创建新的UObject的方式
 	UGAction* NewAction =  NewObject<UGAction>(this,ActionClass);
@@ -50,6 +50,7 @@ void UGActionComponent::AddAction(TSubclassOf<UGAction> ActionClass, AActor* Ins
 			NewAction->StartAction(Instigator);
 		}
 	}
+	return NewAction;
 }
 
 void UGActionComponent::RemoveAction(UGAction* Action)

@@ -12,6 +12,35 @@ UGAttributeComponent::UGAttributeComponent()
 {
 	CurrHealth = 100.0f;
 	MaxHealth = 100.0f;
+	CurrRage = 0;
+	RageGrowthRate = 5;
+	MaxRage = 100;
+}
+
+bool UGAttributeComponent::HaveEnoughRage(int32 RageCost)
+{
+	return (CurrRage-RageCost)>=0;
+}
+
+bool UGAttributeComponent::ApplyRageChange(AActor* Instigator, int32 Delta)
+{
+	if(Delta==0)
+	{
+		return false;
+	}
+	int32 NewRage = FMath::Clamp(CurrRage+Delta,0,MaxRage);
+	int32 ActualDelta = NewRage-CurrRage;
+	bool bSuccess = true;
+	if(Delta<0)
+	{
+		bSuccess = Delta==ActualDelta ? true : false;
+	}
+	if(bSuccess)
+	{
+		CurrRage = NewRage;
+	}
+	OnRageChanged.Broadcast(Instigator,this,CurrRage,ActualDelta,bSuccess);
+	return bSuccess;
 }
 
 bool UGAttributeComponent::ApplyHealthChange(AActor* Instigator, float Delta)
@@ -20,15 +49,23 @@ bool UGAttributeComponent::ApplyHealthChange(AActor* Instigator, float Delta)
 	{
 		return false;		
 	}
+	
+	float Ratio = 1;
 	if(Delta<0.0f)
 	{
-		float Ratio = CVarDamageMultiplier.GetValueOnGameThread();
+		Ratio = CVarDamageMultiplier.GetValueOnGameThread();
 		Delta *= Ratio;
 	}
 	
 	float PreviousHealth = CurrHealth;
 	CurrHealth = FMath::Clamp(CurrHealth+Delta,0.0f,MaxHealth);
 	float AcutualDelta = CurrHealth - PreviousHealth;
+
+	if(AcutualDelta<0.0f)
+	{
+		ApplyRageChange(Instigator,RageGrowthRate);
+	}
+	
 	// 调用代理
 	OnHealthChanged.Broadcast(Instigator,this,CurrHealth,AcutualDelta);
 
@@ -42,7 +79,6 @@ bool UGAttributeComponent::ApplyHealthChange(AActor* Instigator, float Delta)
 			EventManager->OnActorKilled(Owner,Instigator);
 		}
 	}
-	
 	return true;
 }
 
@@ -80,6 +116,11 @@ float UGAttributeComponent::GetCurrHealth()
 float UGAttributeComponent::GetMaxHealth()
 {
 	return MaxHealth;
+}
+
+float UGAttributeComponent::GetMaxRage()
+{
+	return MaxRage;
 }
 
 bool UGAttributeComponent::Kill(AActor* Instigator)
