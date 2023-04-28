@@ -16,6 +16,10 @@ UGEventManager::UGEventManager()
 
 UGEventManager* UGEventManager::GetEventManager(AActor* Actor)
 {
+	if(!Actor)
+	{
+		return nullptr;
+	}
 	auto GM = Actor->GetWorld()->GetAuthGameMode<AGGameModeBase>();
 	if(GM)
 	{

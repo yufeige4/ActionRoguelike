@@ -26,9 +26,8 @@ UGInteractionComponent::UGInteractionComponent()
 void UGInteractionComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	 
-	// ...
 	
+	OwningPawn = Cast<APawn>(GetOwner());
 }
 
 
@@ -112,15 +111,23 @@ void UGInteractionComponent::FindBestInteractable()
 void UGInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	FindBestInteractable();
+	
+	if(OwningPawn->IsLocallyControlled())
+	{
+		FindBestInteractable();
+	}
 	
 }
 
 void UGInteractionComponent::PrimaryInteract()
 {
+	ServerInteract(FocusedActor);
+}
+
+void UGInteractionComponent::ServerInteract_Implementation(AActor* InFocusedActor)
+{
 	// refactored, move tracing logic into tick
-	if(FocusedActor==nullptr)
+	if(InFocusedActor==nullptr)
 	{
 		if(CVarInteractionDrawDebug.GetValueOnGameThread())
 		{
@@ -130,7 +137,7 @@ void UGInteractionComponent::PrimaryInteract()
 	}
 	APawn* MyPawn = Cast<APawn>(GetOwner());
 	// 调用接口
-	IGGameplayInterface::Execute_Interact(FocusedActor,MyPawn);
+	IGGameplayInterface::Execute_Interact(InFocusedActor,MyPawn);
 	/*FCollisionObjectQueryParams ObjectQueryParams;
 	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldDynamic);
 	

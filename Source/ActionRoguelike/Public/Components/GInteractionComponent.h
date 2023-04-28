@@ -33,6 +33,8 @@ protected:
 	UPROPERTY()
 	UGUserWidget_World* HintWidgetInstance;
 
+	APawn* OwningPawn;
+
 public:	
 	// Sets default values for this component's properties
 	UGInteractionComponent();
@@ -40,6 +42,10 @@ public:
 	void PrimaryInteract();
 
 protected:
+	
+	UFUNCTION(Server, Unreliable)
+	void ServerInteract(AActor* InFocusedActor);
+	
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
