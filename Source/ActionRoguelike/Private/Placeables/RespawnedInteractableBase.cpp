@@ -15,7 +15,7 @@ ARespawnedInteractableBase::ARespawnedInteractableBase()
 	DeltaTimeToRespawn = 0.0f;
 	CanInteractAtStart = true;
 	CanInteract = true;
-	
+	SetReplicates(true);
 }
 
 // Called when the game starts or when spawned

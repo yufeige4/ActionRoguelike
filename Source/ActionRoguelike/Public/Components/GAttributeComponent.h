@@ -21,10 +21,10 @@ public:
 
 protected:
 	// 当前生命值
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
+	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
 	float CurrHealth;
 	// 最大生命值
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
+	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
 	float MaxHealth;
 	// 当前怒气
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
@@ -76,4 +76,10 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
 	bool Kill(AActor* Instigator);
+
+protected:
+
+	UFUNCTION(NetMulticast, Reliable) // @FIXME: mark as unreliable once moved the "state" of PlayerCharacter
+	void MulticastHealthChanged(AActor* Instigator, float NewHealth, float Delta);
+	
 };

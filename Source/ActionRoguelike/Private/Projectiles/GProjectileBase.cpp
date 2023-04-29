@@ -30,6 +30,9 @@ AGProjectileBase::AGProjectileBase()
 	// Set up AudioComp
 	AudioComp = CreateDefaultSubobject<UAudioComponent>("AudioComp");
 	AudioComp->SetupAttachment(RootComponent);
+	
+	SetReplicates(true);
+	
 }
 
 

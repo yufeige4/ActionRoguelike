@@ -5,6 +5,7 @@
 
 #include "Components/GEventManager.h"
 #include "Core/GGameModeBase.h"
+#include "Net/UnrealNetwork.h"
 
 static TAutoConsoleVariable<float> CVarDamageMultiplier(TEXT("ARPG.DamageMultiplier"),1.0f,TEXT("Global ratio of damage dealing"),ECVF_Cheat);
 // Sets default values for this component's properties
@@ -15,6 +16,8 @@ UGAttributeComponent::UGAttributeComponent()
 	CurrRage = 0;
 	RageGrowthRate = 5;
 	MaxRage = 100;
+
+	SetIsReplicatedByDefault(true);
 }
 
 bool UGAttributeComponent::HaveEnoughRage(int32 RageCost)
@@ -67,8 +70,11 @@ bool UGAttributeComponent::ApplyHealthChange(AActor* Instigator, float Delta)
 	}
 	
 	// 调用代理
-	OnHealthChanged.Broadcast(Instigator,this,CurrHealth,AcutualDelta);
-
+	// OnHealthChanged.Broadcast(Instigator,this,CurrHealth,AcutualDelta);
+	if(AcutualDelta!=0.0f)
+	{
+		MulticastHealthChanged(Instigator,CurrHealth,AcutualDelta);
+	}
 	// Died
 	if(AcutualDelta<0.0f && CurrHealth==0.0f)
 	{
@@ -128,3 +134,16 @@ bool UGAttributeComponent::Kill(AActor* Instigator)
 	return ApplyHealthChange(Instigator,-MaxHealth);
 }
 
+void UGAttributeComponent::MulticastHealthChanged_Implementation(AActor* Instigator, float NewHealth, float Delta)
+{
+	OnHealthChanged.Broadcast(Instigator,this,NewHealth,Delta);
+}
+
+void UGAttributeComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(UGAttributeComponent,CurrHealth);
+	DOREPLIFETIME(UGAttributeComponent,MaxHealth);
+	// if MaxHealth is changed, only the owner can see it, for saving bandwidth
+	// DOREPLIFETIME_CONDITION(UGAttributeComponent,CurrHealth,COND_OwnerOnly);
+}

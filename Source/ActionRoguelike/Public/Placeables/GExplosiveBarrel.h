@@ -20,10 +20,10 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UStaticMeshComponent* MeshComp;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	URadialForceComponent* ForceComp;
 
 	UPROPERTY(EditAnywhere)
@@ -31,7 +31,6 @@ protected:
 	
 
 	// implement on-hit event
-	UFUNCTION()
 	void OnActorHit(UPrimitiveComponent* HitComp,AActor* OtherActor,UPrimitiveComponent* OtherComp,FVector NormalImpulse,const FHitResult& Hit);
 
 	// initialize and bind on-hit event to mesh
@@ -41,6 +40,7 @@ private:
 	
 	bool ImpulseLock;
 	FTimerHandle ImpulseDelayTimer;
+	UFUNCTION()
 	void Unlock_ImpulseTime_Elapsed();
 
 

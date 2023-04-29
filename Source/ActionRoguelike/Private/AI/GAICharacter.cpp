@@ -78,14 +78,10 @@ void AGAICharacter::SetTargetActor(AActor* Target)
 
 void AGAICharacter::DisplaySpottedPlayerWidget(AActor* PrevTarget, AActor* CurrTarget)
 {
-	AActor* Player = UGameplayStatics::GetPlayerCharacter(GetWorld(),0);
-	if(PrevTarget == CurrTarget)
+	AActor* Player = Cast<AActor>(UGameplayStatics::GetPlayerCharacter(GetWorld(),0));
+	if(PrevTarget)
 	{
 		return;
-	}
-	if(PrevTarget==Player && PlayerSpottedWidgetInstance && PlayerSpottedWidgetInstance->IsInViewport())
-	{
-		PlayerSpottedWidgetInstance->RemoveFromParent();
 	}
 	if(CurrTarget == Player)
 	{

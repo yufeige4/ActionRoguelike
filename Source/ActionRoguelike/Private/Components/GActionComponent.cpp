@@ -8,6 +8,7 @@
 UGActionComponent::UGActionComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
+	SetIsReplicatedByDefault(true);
 }
 
 void UGActionComponent::BeginPlay()
@@ -72,6 +73,11 @@ bool UGActionComponent::StartActionByName(AActor* Instigator, FName ActionName)
 			{
 				return false;
 			}
+			// after checking conditions, if client then do server RPC
+			if(!GetOwner()->HasAuthority())
+			{
+				ServerStartAction(Instigator,ActionName);
+			}
 			Action->StartAction(Instigator);
 			return true;
 		}
@@ -98,4 +104,14 @@ bool UGActionComponent::StopActionByName(AActor* Instigator, FName ActionName)
 UGActionComponent* UGActionComponent::GetActionComponent(AActor* Actor)
 {
 	return Cast<UGActionComponent>(Actor->GetComponentByClass(UGActionComponent::StaticClass()));
+}
+
+void UGActionComponent::ServerStartAction_Implementation(AActor* Instigator, FName ActionName)
+{
+	StartActionByName(Instigator,ActionName);
+}
+
+void UGActionComponent::ServerStopAction_Implementation(AActor* Instigator, FName ActionName)
+{
+	
 }
