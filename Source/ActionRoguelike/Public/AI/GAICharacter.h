@@ -23,6 +23,9 @@ public:
 
 protected:
 
+	UPROPERTY(VisibleDefaultsOnly, Category = "AI")
+	FName TargetActorKey;
+
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UGActionComponent* ActionComp;
 		
@@ -75,6 +78,8 @@ public:
 
 	virtual void Recover_Implementation(UBTTaskNode* TaskNode) override;
 
+	AActor* GetTargetActor() const;
+
 protected:
 	
 	virtual void PostInitializeComponents() override;
@@ -95,7 +100,7 @@ protected:
 
 	void SetTargetActor(AActor* Target);
 
-	void DisplaySpottedPlayerWidget(AActor* PrevTarget, AActor* CurrTarget);
+	void DisplaySpottedPlayerWidget();
 	
 };
 

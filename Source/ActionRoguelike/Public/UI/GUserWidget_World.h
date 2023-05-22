@@ -20,7 +20,7 @@ protected:
 	UPROPERTY(meta=(BindWidget))
 	USizeBox* ParentSizeBox;
 
-	UPROPERTY(EditAnywhere, Category = "UI")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI", meta = (ExposeOnSpawn=true))
 	FVector WorldDisplayOffset;
 	
 public:

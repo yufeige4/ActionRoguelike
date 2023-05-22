@@ -55,7 +55,7 @@ public:
 
 protected:
 
-	UPROPERTY(VisibleDefaultsOnly,Category = "Effects")
+	UPROPERTY(VisibleDefaultsOnly, Category = "Effects")
 	FName TimeToHit;
 
 	void MoveForward(float val);

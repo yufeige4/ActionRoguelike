@@ -2,7 +2,10 @@
 
 
 #include "Abilities/GAction.h"
+
+#include "GGameplayFunctionLibrary.h"
 #include "Components/GActionComponent.h"
+#include "Net/UnrealNetwork.h"
 
 bool UGAction::CanStart_Implementation(AActor* Instigator)
 {
@@ -21,8 +24,8 @@ bool UGAction::CanStart_Implementation(AActor* Instigator)
 
 void UGAction::StartAction_Implementation(AActor* Instigator)
 {
-	UE_LOG(LogTemp,Log,TEXT("StartAction: %s"),*GetNameSafe(this));
-
+	// UE_LOG(LogTemp,Log,TEXT("StartAction: %s"),*GetNameSafe(this));
+	UGGameplayFunctionLibrary::LogOnScreen(this,FString::Printf(TEXT("Started: %s"),*ActionName.ToString()),FColor::Green);
 	ensureAlwaysMsgf(bIsRunning,TEXT("Trying to stop action that was not started!"));
 	
 	UGActionComponent* ActionComp = GetOwningActionComp();
@@ -34,8 +37,8 @@ void UGAction::StartAction_Implementation(AActor* Instigator)
 
 void UGAction::StopAction_Implementation(AActor* Instigator)
 {
-	UE_LOG(LogTemp,Log,TEXT("StopAction: %s"),*GetNameSafe(this));
-	
+	// UE_LOG(LogTemp,Log,TEXT("StopAction: %s"),*GetNameSafe(this));
+	UGGameplayFunctionLibrary::LogOnScreen(this,FString::Printf(TEXT("Stopped: %s"),*ActionName.ToString()),FColor::Silver);
 	UGActionComponent* ActionComp = GetOwningActionComp();
 	if(ActionComp)
 	{
@@ -46,7 +49,7 @@ void UGAction::StopAction_Implementation(AActor* Instigator)
 
 UGActionComponent* UGAction::GetOwningActionComp() const
 {
-	return Cast<UGActionComponent>(GetOuter());
+	return OwningActionComp;
 }
 
 UGAction::UGAction()
@@ -55,12 +58,17 @@ UGAction::UGAction()
 	bAutoStart = false;
 }
 
+void UGAction::Initialize(UGActionComponent* NewActionComp)
+{
+	OwningActionComp = NewActionComp;
+}
+
 UWorld* UGAction::GetWorld() const
 {
-	UGActionComponent* ActionComp = Cast<UGActionComponent>(GetOuter());
-	if(ActionComp)
+	AActor* Outer = Cast<AActor>(GetOuter());
+	if(Outer)
 	{
-		return ActionComp->GetWorld();
+		return Outer->GetWorld();
 	}
 	return nullptr;
 }
@@ -68,4 +76,24 @@ UWorld* UGAction::GetWorld() const
 bool UGAction::IsRunning() const
 {
 	return bIsRunning;
+}
+
+void UGAction::OnRep_IsRunning()
+{
+	if(bIsRunning)
+	{
+		StartAction(nullptr);
+	}else
+	{
+		StopAction(nullptr);
+	}
+}
+
+void UGAction::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(UGAction,bIsRunning);
+	DOREPLIFETIME(UGAction,OwningActionComp);
+
 }

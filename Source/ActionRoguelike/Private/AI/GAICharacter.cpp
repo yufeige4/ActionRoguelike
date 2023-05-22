@@ -28,6 +28,7 @@ AGAICharacter::AGAICharacter()
 
 	RandomAttackOffset = 2.0f;
 	TimeToHit = "TimeToHit";
+	TargetActorKey = "TargetActor";
 }
 
 
@@ -70,35 +71,26 @@ void AGAICharacter::SetTargetActor(AActor* Target)
 	if(AIC)
 	{
 		auto MyBB = AIC->GetBlackboardComponent();
-		DisplaySpottedPlayerWidget(Cast<AActor>(MyBB->GetValueAsObject("TargetActor")),Target);
-		MyBB->SetValueAsObject("TargetActor",Target);
+		MyBB->SetValueAsObject(TargetActorKey,Target);
+		DisplaySpottedPlayerWidget();
 		//DrawDebugString(GetWorld(),GetActorLocation(),"Change TargetActor!!!",nullptr,FColor::White,4.0f,true);
 	}
 }
 
-void AGAICharacter::DisplaySpottedPlayerWidget(AActor* PrevTarget, AActor* CurrTarget)
+void AGAICharacter::DisplaySpottedPlayerWidget()
 {
-	AActor* Player = Cast<AActor>(UGameplayStatics::GetPlayerCharacter(GetWorld(),0));
-	if(PrevTarget)
+	if(!PlayerSpottedWidgetInstance && ensure(PlayerSpottedWidgetClass))
 	{
-		return;
+		PlayerSpottedWidgetInstance = CreateWidget<UGUserWidget_World>(GetWorld(),PlayerSpottedWidgetClass);
 	}
-	if(CurrTarget == Player)
+	if(PlayerSpottedWidgetInstance)
 	{
-		if(!PlayerSpottedWidgetInstance && ensure(PlayerSpottedWidgetClass))
+		PlayerSpottedWidgetInstance->AttachedActor = this;
+		if(!PlayerSpottedWidgetInstance->IsInViewport())
 		{
-			PlayerSpottedWidgetInstance = CreateWidget<UGUserWidget_World>(GetWorld(),PlayerSpottedWidgetClass);
-		}
-		if(PlayerSpottedWidgetInstance)
-		{
-			PlayerSpottedWidgetInstance->AttachedActor = this;
-			if(!PlayerSpottedWidgetInstance->IsInViewport())
-			{
-				PlayerSpottedWidgetInstance->AddToViewport();
-			}
+			PlayerSpottedWidgetInstance->AddToViewport(10);
 		}
 	}
-	
 }
 
 
@@ -112,7 +104,11 @@ void AGAICharacter::PostInitializeComponents()
 
 void AGAICharacter::OnPawnSeen(APawn* SeenPawn)
 {
-	SetTargetActor(SeenPawn);
+	AActor* PrevTarget = GetTargetActor();
+	if(PrevTarget!=SeenPawn)
+	{
+		SetTargetActor(SeenPawn);
+	}
 	//DrawDebugString(GetWorld(),GetActorLocation(),"See Player!!!",nullptr,FColor::White,4.0f,true);
 }
 
@@ -197,4 +193,15 @@ void AGAICharacter::DisplayHealthBar()
 		HealthBarInstance->AttachedActor = this;
 		HealthBarInstance->AddToViewport();
 	}
+}
+
+AActor* AGAICharacter::GetTargetActor() const
+{
+	AAIController* AIC = Cast<AAIController>(GetController());
+	{
+		auto MyBB = AIC->GetBlackboardComponent();
+		return Cast<AActor>(MyBB->GetValueAsObject(TargetActorKey));
+		//DrawDebugString(GetWorld(),GetActorLocation(),"Change TargetActor!!!",nullptr,FColor::White,4.0f,true);
+	}
+	return nullptr;
 }

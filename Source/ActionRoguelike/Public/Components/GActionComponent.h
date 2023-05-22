@@ -24,7 +24,7 @@ public:
 
 protected:
 	
-	UPROPERTY()
+	UPROPERTY(Replicated)
 	TArray<UGAction*> Actions;
 
 	UPROPERTY(EditAnywhere, Category = "Actions")
@@ -58,5 +58,6 @@ protected:
 
 	UFUNCTION(Server, Reliable)
 	void ServerStopAction(AActor* Instigator, FName ActionName);
-	
+
+	bool ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags) override;
 };

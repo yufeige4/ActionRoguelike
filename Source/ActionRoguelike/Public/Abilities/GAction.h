@@ -32,11 +32,17 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Tags")
 	FGameplayTagContainer BlockedTags;
 	// internal bool to check whether it is running
+	UPROPERTY(ReplicatedUsing = "OnRep_IsRunning")
 	bool bIsRunning;
+
+	UPROPERTY(Replicated)
+	UGActionComponent* OwningActionComp;
 	
 public:
 
 	UGAction();
+
+	void Initialize(UGActionComponent* NewActionComp);
 	// functions
 	UFUNCTION(BlueprintNativeEvent, Category = "Action")
 	bool CanStart(AActor* Instigator);
@@ -56,4 +62,12 @@ protected:
 	
 	UFUNCTION(BlueprintCallable, Category = "Action")
 	UGActionComponent* GetOwningActionComp() const;
+
+	UFUNCTION()
+	void OnRep_IsRunning();
+
+	bool IsSupportedForNetworking() const override
+	{
+		return true;
+	}
 };

@@ -4,6 +4,10 @@
 #include "Components/GActionComponent.h"
 #include "GGameplayFunctionLibrary.h"
 #include "Abilities/GAction.h"
+#include "Engine/ActorChannel.h"
+#include "Net/UnrealNetwork.h"
+
+static TAutoConsoleVariable<bool> CVarDebugMultiplayerAction(TEXT("ARPG.DebugMultiplayerAction"),false,TEXT("Log multiplayer action info"),ECVF_Cheat);
 
 UGActionComponent::UGActionComponent()
 {
@@ -14,10 +18,15 @@ UGActionComponent::UGActionComponent()
 void UGActionComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	for(TSubclassOf<UGAction> Action : DefaultActions)
+
+	// Server中才会存在Action
+	if(GetOwner()->HasAuthority())
 	{
-		// add from default actions should consider owner of comp as Instigator
-		AddAction(Action,GetOwner());
+		for(TSubclassOf<UGAction> Action : DefaultActions)
+		{
+			// add from default actions should consider owner of comp as Instigator
+			AddAction(Action,GetOwner());
+		}
 	}
 }
 
@@ -33,6 +42,18 @@ void UGActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 			GEngine->AddOnScreenDebugMessage(-1,0.0,FColor::White,DebugMsg);
 		}
 	}
+
+	if(CVarDebugMultiplayerAction.GetValueOnGameThread())
+	{
+		for(UGAction* Action : Actions)
+		{
+			FColor TextColor = Action->IsRunning() ? FColor::Blue : FColor::White;
+			FString TextIsRunning = Action->IsRunning() ? TEXT("True") : TEXT("False");
+			FString ActionMsg = FString::Printf(TEXT("[%s] Action: %s | IsRunning: %s | Outer: %s"),*GetNameSafe(GetOwner()),*Action->ActionName.ToString(),*TextIsRunning,*GetNameSafe(Action->GetOuter()));
+
+			UGGameplayFunctionLibrary::LogOnScreen(this,ActionMsg,TextColor,0.0f);
+		}
+	}
 }
 
 UGAction* UGActionComponent::AddAction(TSubclassOf<UGAction> ActionClass, AActor* Instigator)
@@ -42,10 +63,13 @@ UGAction* UGActionComponent::AddAction(TSubclassOf<UGAction> ActionClass, AActor
 		return nullptr;
 	}
 	// UE创建新的UObject的方式
-	UGAction* NewAction =  NewObject<UGAction>(this,ActionClass);
+	UGAction* NewAction =  NewObject<UGAction>(GetOwner(),ActionClass);
 	if(ensure(NewAction))
 	{
+		NewAction->Initialize(this);
+		
 		Actions.Add(NewAction);
+		
 		if(NewAction->bAutoStart && ensure(NewAction->CanStart(Instigator)))
 		{
 			NewAction->StartAction(Instigator);
@@ -113,5 +137,26 @@ void UGActionComponent::ServerStartAction_Implementation(AActor* Instigator, FNa
 
 void UGActionComponent::ServerStopAction_Implementation(AActor* Instigator, FName ActionName)
 {
-	
+	StopActionByName(Instigator,ActionName);
+}
+
+void UGActionComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(UGActionComponent,Actions);
+}
+
+bool UGActionComponent::ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags)
+{
+	bool Output = Super::ReplicateSubobjects(Channel, Bunch, RepFlags);
+	for(UGAction* Action : Actions)
+	{
+		if(Action)
+		{
+			// 对每个Action进行Replicate
+			Output |= Channel->ReplicateSubobject(Action,*Bunch,*RepFlags);
+		}
+	}
+	return Output;
 }

@@ -26,11 +26,14 @@ UCLASS()
 class ACTIONROGUELIKE_API UGGameplayFunctionLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
-
+ 
 public:
+	
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	static bool ApplyDamage(AActor* FromActor, AActor* ToActor, float DamageAmount);
 
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	static bool ApplyDirectionalDamage(AActor* FromActor, AActor* ToActor, float DamageAmount, const FHitResult& HitResult);
+
+	static void LogOnScreen(UObject* WorldContent, FString Msg, FColor Color = FColor::White, float Duration = 5.0f);
 };

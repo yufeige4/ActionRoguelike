@@ -34,3 +34,18 @@ bool UGGameplayFunctionLibrary::ApplyDirectionalDamage(AActor* FromActor, AActor
 	return false;
 }
 
+void UGGameplayFunctionLibrary::LogOnScreen(UObject* WorldContent, FString Msg, FColor Color, float Duration)
+{
+	if(!ensure(WorldContent))
+	{
+		return;
+	}
+	UWorld* World = WorldContent->GetWorld();
+	FString NetPrefix = World->IsNetMode(NM_Client) ? "[CLIENT]" : "[SERVER]";
+	if(GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1,Duration,Color,NetPrefix+Msg);
+	}
+}
+
+
