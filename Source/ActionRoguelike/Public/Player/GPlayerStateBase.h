@@ -18,7 +18,7 @@ class ACTIONROGUELIKE_API AGPlayerStateBase : public APlayerState
 protected:
 
 	// Better implement credit in credit system
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(Replicated, BlueprintReadOnly)
 	int Credit;
 
 public:
@@ -43,4 +43,7 @@ protected:
 
 	UFUNCTION()
 	void CreditChangeOnPickUpItemEvent(AActor* Picker,AActor* Item);
+
+	virtual void Tick(float DeltaSeconds) override;
+	
 };

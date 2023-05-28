@@ -3,8 +3,10 @@
 
 #include "Player/GPlayerStateBase.h"
 
+#include "GGameplayFunctionLibrary.h"
 #include "AI/GAICharacter.h"
 #include "Components/GEventManager.h"
+#include "Net/UnrealNetwork.h"
 // @fix-me: improve by getting it from data table
 #define Credit_KILLMONSTER 10
 #define Credit_USEPOTION -5
@@ -13,6 +15,7 @@
 AGPlayerStateBase::AGPlayerStateBase()
 {
 	Credit = 0;
+	PrimaryActorTick.bCanEverTick = true;
 }
 
 bool AGPlayerStateBase::ApplyCreditChange(int Delta)
@@ -83,4 +86,19 @@ void AGPlayerStateBase::CreditChangeOnPickUpItemEvent(AActor* Picker, AActor* It
 		// @fix-me: need to read from data table
 		ApplyCreditChange(Credit_PICKUPCOIN);
 	}
+}
+
+void AGPlayerStateBase::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	FString Msg = "Credits: " + FString::FromInt(Credit);
+	UGGameplayFunctionLibrary::LogOnScreen(GetOwner(),Msg,FColor::Green,0);
+}
+
+void AGPlayerStateBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AGPlayerStateBase,Credit);
 }
